@@ -1,0 +1,33 @@
+# Compiled object files
+*.o
+*.obj
+
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Executables
+*.exe
+*.out
+*.app
+
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.tmp.*
+
+
+# Build directories
+build/
+bin/
+
+# Dependency directories
+deps/
+
+# Package directories
+*.egg-info/
+
+
