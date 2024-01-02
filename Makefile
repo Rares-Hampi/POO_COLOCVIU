@@ -1,4 +1,4 @@
-SOURCES=main.cpp user.cpp criptareandvalidare.cpp
+SOURCES=main.cpp user.cpp criptare_si_validare.cpp
 
 ex: $(SOURCES)
 	g++ -o aplicatie $(SOURCES)

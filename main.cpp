@@ -1,4 +1,6 @@
 #include <iostream>
+#include "user.h"
+#include "criptare_si_validare.h"
 
 using namespace std;
 
@@ -13,6 +15,16 @@ public:
     ~Menu()
     {
         cout << "Menu destructor" << endl;
+    }
+
+    string getOption()
+    {
+        string option;
+
+        cout << "Introduceti optiunea: ";
+        cin >> option;
+        system("clear");
+        return option;
     }
 
     void showStart()
@@ -150,101 +162,238 @@ public:
 
     void run()
     {
+        string option;
 
-        int option = 0;
         do
         {
             menu.showStart();
-            cout << "Optiunea aleasa: ";
-            cin >> option;
+            option = menu.getOption();
             // register
-            if (option == 1)
+            if (option == "1")
             {
-                menu.showRegister();
-                int option2 = 0;
+                string optionRegister;
                 do
                 {
-                    cout << "Optiunea aleasa: ";
-                    cin >> option2;
-                    if (option2 == 1)
+                    menu.showRegister();
+                    optionRegister = menu.getOption();
+                    if (optionRegister == "1")
                     {
-                        cout << "Numele este: ";
+                        string nume;
+                        string error;
+                        do
+                        {
+
+                            cout << "Introduceti numele: ";
+                            getline(cin, nume);
+
+                            try
+                            {
+                                user.setNume(nume);
+                                error = "";
+                            }
+                            catch (const char *e)
+                            {
+                                error = e;
+                                cout << e << '\n';
+                            };
+                            fflush(stdin);
+                        } while (error.length() > 0);
                     }
-                    else if (option2 == 2)
+                    else if (optionRegister == "2")
                     {
-                        cout << "Emailul este: ";
+                        string email;
+                        string error;
+                        do
+                        {
+                            cout << "Introduceti email: ";
+                            cin >> email;
+                            try
+                            {
+                                if (email.empty())
+                                {
+                                    throw "Emailul nu poate fi gol";
+                                }
+
+                                user.setEmail(email);
+                                error = "";
+                            }
+                            catch (const char *e)
+                            {
+                                error = e;
+                                cout << e << '\n';
+                            }
+
+                        } while (error.length() > 0);
                     }
-                    else if (option2 == 3)
+                    else if (optionRegister == "3")
                     {
-                        cout << "Numarul de telefon este: ";
+                        string parola;
+                        string error;
+                        do
+                        {
+                            cout << "Introduceti parola: ";
+                            cin >> parola;
+                            try
+                            {
+                                if (parola.empty())
+                                {
+                                    throw "Parola nu poate fi goala";
+                                }
+                                user.setParola(parola);
+                                error = "";
+                            }
+                            catch (const char *e)
+                            {
+                                error = e;
+                                cerr << e << '\n';
+                            }
+                            catch (const string &e)
+                            {
+                                error = e;
+                                cerr << e << '\n';
+                            }
+                        } while (error.length() > 0);
                     }
-                    else if (option2 == 4)
+                    else if (optionRegister == "4")
                     {
-                        cout << "Parola este: ";
+                        string phone;
+                        string error;
+                        do
+                        {
+                            cout << "Introduceti telefon: ";
+
+                            cin >> phone;
+                            try
+                            {
+                                if (phone.empty())
+                                {
+                                    throw "Telefonul nu poate fi gol";
+                                }
+
+                                user.setPhone(phone);
+                                error = "";
+                            }
+                            catch (const char *e)
+                            {
+                                error = e;
+                                cerr << e << '\n';
+                            }
+                        } while (error.length() > 0);
                     }
-                    else if (option2 == 5)
+                    else if (optionRegister == "5")
                     {
-                        cout << "Inregistrare" << endl;
+                        try
+                        {
+
+                            user.Register(user.getNume(), user.getEmail(), user.getParola(), user.getPhone());
+                            cout << "Inregistrare cu succes" << endl;
+                        }
+                        catch (const char *e)
+                        {
+                            cout << e << '\n';
+                        }
                     }
-                    else if (option2 == 6)
-                    {
-                        cout << "Inapoi" << endl;
-                    }
-                    else
-                    {
-                        cout << "Optiune invalida" << endl;
-                    }
-                } while (option2 != 6);
+
+                } while (optionRegister != "6");
             }
-            // login
-            else if (option == 2)
+            // Login
+            else if (option == "2")
             {
-                menu.showLogin();
-                int option2 = 0;
+                string optionLogin;
                 do
                 {
-                    cout << "Optiunea aleasa: ";
-                    cin >> option2;
-                    if (option2 == 1)
+                    menu.showLogin();
+                    optionLogin = menu.getOption();
+                    if (optionLogin == "1")
                     {
-                        cout << "Emailul este: ";
+                        string email;
+                        string error;
+
+                        do
+                        {
+                            cout << "Introduceti email: ";
+                            cin >> email;
+                            try
+                            {
+                                if (email.empty())
+                                {
+                                    throw "Emailul nu poate fi gol";
+                                }
+
+                                user.setEmail(email);
+                            }
+                            catch (const char *e)
+                            {
+                                cerr << e << '\n';
+                                error = e;
+                            }
+                        } while (error.length() > 0);
                     }
-                    else if (option2 == 2)
+                    else if (optionLogin == "2")
                     {
-                        cout << "Parola este: ";
+                        string parola;
+                        string error;
+                        cout << "Introduceti parola: ";
+
+                        cin >> parola;
+                        do
+                        {
+                            try
+                            {
+                                if (parola.empty())
+                                {
+                                    throw "Parola nu poate fi goala";
+                                }
+                                user.setParola(parola);
+                                cout << "Parola setata cu succes" << endl;
+                                error = "";
+                            }
+                            catch (const char *e)
+                            {
+                                cerr << e << '\n';
+                                error = e;
+                            }
+                        } while (error.length() > 0);
                     }
-                    else if (option2 == 3)
+                    else if (optionLogin == "3")
                     {
-                        cout << "Logare" << endl;
+                        try
+                        {
+                            user.Login(user.getEmail(), user.getParola());
+                            cout << "Logare cu succes" << endl;
+                        }
+                        catch (const char *e)
+                        {
+                            cerr << e << '\n';
+                        }
+                        catch (const string &e)
+                        {
+                            cerr << e << '\n';
+                        }
                     }
-                    else if (option2 == 4)
+                    else if (optionLogin == "4")
                     {
                         cout << "Inapoi" << endl;
                     }
-                    else
-                    {
-                        cout << "Optiune invalida" << endl;
-                    }
-                } while (option2 != 4);
+                } while (optionLogin != "4");
             }
             // run workflow
-            else if (option == 3)
+            else if (option == "3")
             {
                 menu.showRunWorkflow();
-                int option2 = 0;
+                string option2;
                 do
                 {
-                    cout << "Optiunea aleasa: ";
-                    cin >> option2;
-                    if (option2 == 1)
+                    option2 = menu.getOption();
+                    if (option2 == "1")
                     {
                         cout << "Afisare workflows" << endl;
                     }
-                    else if (option2 == 2)
+                    else if (option2 == "2")
                     {
                         cout << "Alege workflow" << endl;
                     }
-                    else if (option2 == 3)
+                    else if (option2 == "3")
                     {
                         cout << "Inapoi" << endl;
                     }
@@ -252,208 +401,203 @@ public:
                     {
                         cout << "Optiune invalida" << endl;
                     }
-                } while (option2 != 3);
+                } while (option2 != "3");
             }
             // create workflow
-            else if (option == 4)
+            else if (option == "4")
             {
                 menu.showCreateWorkflow();
-                int option2 = 0;
+                string option2;
                 do
                 {
-                    cout << "Optiunea aleasa: ";
-                    cin >> option2;
-                    if (option2 == 1)
+                    option2 = menu.getOption();
+                    if (option2 == "1")
                     {
                         menu.showShoppingListWorkflow();
-                        int option3 = 0;
+                        string option3;
                         do
                         {
-                            cout << "Optiunea aleasa: ";
-                            cin >> option3;
-                            if (option3 == 1)
+                            option3 = menu.getOption();
+                            if (option3 == "1")
                             {
                                 menu.showAddTask();
-                                int option4 = 0;
+                                string option4;
                                 do
                                 {
-                                    cout << "Optiunea aleasa: ";
-                                    cin >> option4;
-                                    if (option4 == 1)
+                                    option4 = menu.getOption();
+                                    if (option4 == "1")
                                     {
                                         cout << "Numele taskului este: ";
                                     }
-                                    else if (option4 == 2)
+                                    else if (option4 == "2")
                                     {
                                         cout << "Descrierea taskului este: ";
                                     }
-                                    else if (option4 == 3)
+                                    else if (option4 == "3")
                                     {
                                         cout << "Taskul are nevoie de un input? (y/n): ";
                                     }
-                                    else if (option4 == 4)
+                                    else if (option4 == "4")
                                     {
                                         cout << "Adaugare task" << endl;
                                     }
-                                    else if (option4 == 5)
+                                    else if (option4 == "5")
                                     {
                                         cout << "Inapoi" << endl;
                                     }
-                                } while (option4 != 5);
+                                } while (option4 != "5");
                             }
-                            else if (option3 == 2)
+                            else if (option3 == "2")
                             {
                                 cout << "Inapoi" << endl;
                             }
-                        } while (option3 != 2);
+                        } while (option3 != "2");
                     }
-                    else if (option2 == 2)
+                    else if (option2 == "2")
                     {
                         menu.showEventWorkflow();
-                        int option3 = 0;
+                        string option3;
                         do
                         {
-                            cout << "Optiunea aleasa: ";
-                            cin >> option3;
-                            if (option3 == 1)
+                            option3 = menu.getOption();
+                            if (option3 == "1")
                             {
                                 menu.showAddTask();
-                                int option4 = 0;
+                                string option4;
                                 do
                                 {
-                                    cout << "Optiunea aleasa: ";
-                                    cin >> option4;
-                                    if (option4 == 1)
+                                    option4 = menu.getOption();
+                                    if (option4 == "1")
                                     {
                                         cout << "Numele taskului este: ";
                                     }
-                                    else if (option4 == 2)
+                                    else if (option4 == "2")
                                     {
                                         cout << "Descrierea taskului este: ";
                                     }
-                                    else if (option4 == 3)
+                                    else if (option4 == "3")
                                     {
                                         cout << "Taskul are nevoie de un input? (y/n): ";
                                     }
-                                    else if (option4 == 4)
+                                    else if (option4 == "4")
                                     {
                                         cout << "Adaugare task" << endl;
                                     }
-                                    else if (option4 == 5)
+                                    else if (option4 == "5")
                                     {
                                         cout << "Inapoi" << endl;
                                     }
 
-                                } while (option4 != 5);
+                                } while (option4 != "5");
                             }
 
-                        } while (option3 != 2);
+                        } while (option3 != "2");
                     }
 
-                    else if (option == 3)
+                    else if (option == "3")
                     {
                         menu.showCustomWorkflow();
-                        int option3 = 0;
+                        string option3;
                         do
                         {
-                            if (option3 == 1)
+                            option3 = menu.getOption();
+                            if (option3 == "1")
                             {
                                 cout << "Cate taskuri doriti sa aiba acest workflow? :" << endl;
                             }
-                            else if (option3 == 2)
+                            else if (option3 == "2")
                             {
                                 menu.showAddTask();
-                                int option4 = 0;
+                                string option4;
                                 do
                                 {
                                     cout << "Optiunea aleasa: ";
-                                    cin >> option4;
-                                    if (option4 == 1)
+                                    option4 = menu.getOption();
+                                    if (option4 == "1")
                                     {
                                         cout << "Numele taskului este: ";
                                     }
-                                    else if (option4 == 2)
+                                    else if (option4 == "2")
                                     {
                                         cout << "Descrierea taskului este: ";
                                     }
-                                    else if (option4 == 3)
+                                    else if (option4 == "3")
                                     {
                                         cout << "Taskul are nevoie de un input? (y/n): ";
                                     }
-                                    else if (option4 == 4)
+                                    else if (option4 == "4")
                                     {
                                         cout << "Adaugare task" << endl;
                                     }
-                                    else if (option4 == 5)
+                                    else if (option4 == "5")
                                     {
                                         cout << "Inapoi" << endl;
                                     }
 
-                                } while (option4 != 5);
+                                } while (option4 != "5");
                             }
 
-                        } while (option3 != 2);
+                        } while (option3 != "2");
                     }
 
-                } while (option != 6);
+                } while (option != "6");
             }
-            else if (option == 5)
+            else if (option == "5")
             {
                 menu.showDeleteWorkflow();
-                int option2 = 0;
+                string option2;
                 do
                 {
-                    cout << "Optiunea aleasa: ";
-                    cin >> option2;
-                    if (option2 == 1)
+                    option2 = menu.getOption();
+                    if (option2 == "1")
                     {
                         cout << "Afisare workflows" << endl;
                     }
-                    else if (option2 == 2)
+                    else if (option2 == "2")
                     {
                         cout << "Alege workflow" << endl;
                     }
-                    else if (option2 == 3)
+                    else if (option2 == "3")
                     {
                         menu.showDeleteTask();
-                        int option3 = 0;
+                        string option3;
                         do
                         {
-                            cout << "Optiunea aleasa: ";
-                            cin >> option3;
-                            if (option3 == 1)
+                            option3 = menu.getOption();
+                            if (option3 == "1")
                             {
                                 cout << "Afisare taskuri" << endl;
                             }
-                            else if (option3 == 2)
+                            else if (option3 == "2")
                             {
                                 cout << "Alege task" << endl;
                             }
-                            else if (option3 == 3)
+                            else if (option3 == "3")
                             {
                                 cout << "Sterge task" << endl;
                             }
-                            else if (option3 == 4)
+                            else if (option3 == "4")
                             {
                                 cout << "Inapoi" << endl;
                             }
-                        } while (option3 != 4);
+                        } while (option3 != "4");
                     }
-                    else if (option2 == 4)
+                    else if (option2 == "4")
                     {
                         cout << "Inapoi" << endl;
                     }
-                } while (option2 != 4);
+                } while (option2 != "4");
             }
-            else if (option == 6)
+            else if (option == "6")
             {
                 menu.showExit();
             }
-        } while (option != 6);
+        } while (option != "6");
     };
 
 private:
     Menu menu;
+    User user;
 };
 
 int main()

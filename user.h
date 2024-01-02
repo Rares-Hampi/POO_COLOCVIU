@@ -1,12 +1,12 @@
-#ifndef UTILIZATOR_H
-#define UTILIZATOR_H
+#ifndef USER_H
+#define USER_H
 #include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
 using namespace std;
 
-class Utilizator
+class User
 {
 
 private:
@@ -16,7 +16,7 @@ private:
     string parola;
 
 public:
-    Utilizator();
+    User();
 
     void setNume(string nume);
 

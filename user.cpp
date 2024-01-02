@@ -1,7 +1,7 @@
 #include "user.h"
 #include "criptare_si_validare.h"
 
-Utilizator::Utilizator()
+User::User()
 {
     nume = "";
     phone = "";
@@ -9,7 +9,7 @@ Utilizator::Utilizator()
     parola = "";
 }
 
-void Utilizator::setNume(string nume)
+void User::setNume(string nume)
 {
     try
     {
@@ -25,7 +25,7 @@ void Utilizator::setNume(string nume)
     }
 }
 
-void Utilizator::setEmail(string email)
+void User::setEmail(string email)
 {
 
     CriptareAndValidare validare;
@@ -40,7 +40,7 @@ void Utilizator::setEmail(string email)
     }
 }
 
-void Utilizator::setPhone(string phone)
+void User::setPhone(string phone)
 {
 
     CriptareAndValidare validare;
@@ -55,7 +55,7 @@ void Utilizator::setPhone(string phone)
     }
 }
 
-void Utilizator::setParola(string parola)
+void User::setParola(string parola)
 {
 
     vector<int> keys;
@@ -93,27 +93,27 @@ void Utilizator::setParola(string parola)
     }
 }
 
-string Utilizator::getNume()
+string User::getNume()
 {
     return this->nume;
 }
 
-string Utilizator::getPhone()
+string User::getPhone()
 {
     return this->phone;
 }
 
-string Utilizator::getEmail()
+string User::getEmail()
 {
     return this->email;
 }
 
-string Utilizator::getParola()
+string User::getParola()
 {
     return this->parola;
 }
 
-void Utilizator::checkData()
+void User::checkData()
 {
     try
     {
@@ -142,7 +142,7 @@ void Utilizator::checkData()
     }
 }
 
-void Utilizator::deleteData()
+void User::deleteData()
 {
     nume = "";
     email = "";
@@ -150,7 +150,7 @@ void Utilizator::deleteData()
     phone = "";
 }
 
-void Utilizator::Register(string nume, string email, string parola, string phone)
+void User::Register(string nume, string email, string parola, string phone)
 {
 
     try
@@ -180,7 +180,7 @@ void Utilizator::Register(string nume, string email, string parola, string phone
     }
 }
 
-void Utilizator::Login(string email, string parola)
+void User::Login(string email, string parola)
 {
 
     try
@@ -267,7 +267,7 @@ void Utilizator::Login(string email, string parola)
     }
 }
 
-void Utilizator::getData(string email)
+void User::getData(string email)
 {
     try
     {
@@ -313,7 +313,7 @@ void Utilizator::getData(string email)
     }
 }
 
-void Utilizator::Logout()
+void User::Logout()
 {
 
     try
@@ -328,7 +328,7 @@ void Utilizator::Logout()
     }
 }
 
-void Utilizator::Edit(string filePath, string oldValue, string newValue, string email)
+void User::Edit(string filePath, string oldValue, string newValue, string email)
 {
     try
     {
@@ -365,7 +365,7 @@ void Utilizator::Edit(string filePath, string oldValue, string newValue, string 
     }
 }
 
-void Utilizator::EditEmail(string email, string newEmail)
+void User::EditEmail(string email, string newEmail)
 {
 
     try
@@ -380,7 +380,7 @@ void Utilizator::EditEmail(string email, string newEmail)
     }
 }
 
-void Utilizator::EditPhone(string email, string newPhone)
+void User::EditPhone(string email, string newPhone)
 {
 
     try
