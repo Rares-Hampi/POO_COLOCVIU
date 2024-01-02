@@ -315,10 +315,10 @@ void Utilizator::getData(string email)
 
 void Utilizator::Logout()
 {
-    Operator admin;
+
     try
     {
-        admin.getStatus(this->email);
+
         Edit("./csv/conturi.csv", "logat", "inregistrat", this->email);
         deleteData();
     }
@@ -367,11 +367,10 @@ void Utilizator::Edit(string filePath, string oldValue, string newValue, string 
 
 void Utilizator::EditEmail(string email, string newEmail)
 {
-    Operator admin;
+
     try
     {
 
-        admin.getExistenceMail(newEmail);
         Edit("./csv/conturi.csv", email, newEmail, email);
         this->email = newEmail;
     }
@@ -383,163 +382,12 @@ void Utilizator::EditEmail(string email, string newEmail)
 
 void Utilizator::EditPhone(string email, string newPhone)
 {
-    Operator admin;
+
     try
     {
-        admin.getExistencePhone(newPhone);
+
         Edit("./csv/conturi.csv", this->phone, newPhone, email);
         this->phone = newPhone;
-    }
-    catch (const char *e)
-    {
-        throw e;
-    }
-}
-
-void Utilizator::rezervareRuta(string nume, string email)
-{
-    Operator admin;
-
-    try
-    {
-
-        if (stoi(admin.getRutaLocuri(nume)) < 1)
-        {
-            throw "Nu mai sunt locuri disponibile";
-        }
-
-        ifstream file;
-        file.open("./csv/rute.csv");
-        if (file.is_open())
-        {
-            string line;
-            while (getline(file, line))
-            {
-                stringstream ss(line);
-
-                string storedLocuri;
-                string storedName;
-                getline(ss, storedName, ',');
-                for (int i = 0; i < 6; i++)
-                {
-                    getline(ss, storedLocuri, ',');
-                }
-
-                if (storedName == nume)
-                {
-                    if (stoi(storedLocuri) > 0)
-                    {
-                        ofstream file1;
-                        file1.open("./csv/rezervari.csv", ios::app);
-                        if (file1.is_open())
-                        {
-                            file1 << nume << "," << email << endl;
-                            file1.close();
-                        }
-                        else
-                        {
-                            throw "Nu s-a putut deschide fisierul";
-                        }
-                        admin.updateRuta(nume, "locuri", to_string(stoi(storedLocuri) - 1));
-
-                        break;
-                    }
-                    else
-                    {
-                        throw "Nu mai sunt locuri disponibile";
-                    }
-                    break;
-                }
-            }
-            file.close();
-        }
-        else
-        {
-            throw "Nu s-a putut deschide fisierul";
-        }
-    }
-    catch (const char *e)
-    {
-        throw e;
-    }
-}
-
-void Utilizator::anulareRezervare(string name, string email)
-{
-    Operator admin;
-    try
-    {
-        ifstream file("./csv/rezervari.csv");
-        ofstream temp("./csv/temp2.csv", ios::app);
-        if (file.is_open() && temp.is_open())
-        {
-            string line;
-            while (getline(file, line))
-            {
-                stringstream ss(line);
-                string storedName;
-                string storedEmail;
-
-                getline(ss, storedName, ',');
-                getline(ss, storedEmail, ',');
-
-                if (storedName == name && storedEmail == email)
-                {
-                    cout << "Rezervarea a fost anulata" << endl;
-                    admin.updateRuta(name, "locuri", to_string(stoi(admin.getRutaLocuri(name)) + 1));
-                }
-                else
-                {
-                    temp << line << endl;
-                }
-            }
-            file.close();
-            temp.close();
-        }
-        else
-        {
-            throw "Nu s-a putut deschide fisierul";
-        }
-        remove("./csv/rezervari.csv");
-        rename("./csv/temp2.csv", "./csv/rezervari.csv");
-    }
-    catch (const char *e)
-    {
-        throw e;
-    }
-}
-
-void Utilizator::getRezervari(string email)
-{
-    Operator admin;
-
-    try
-    {
-        ifstream file;
-        file.open("./csv/rezervari.csv");
-        if (file.is_open())
-        {
-            string line;
-            while (getline(file, line))
-            {
-                stringstream ss(line);
-                string storedName;
-                string storedEmail;
-
-                getline(ss, storedName, ',');
-                getline(ss, storedEmail, ',');
-
-                if (storedEmail == email)
-                {
-                    admin.getRuta(storedName);
-                }
-            }
-            file.close();
-        }
-        else
-        {
-            throw "Nu s-a putut deschide fisierul";
-        }
     }
     catch (const char *e)
     {

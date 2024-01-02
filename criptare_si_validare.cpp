@@ -1,4 +1,4 @@
-#include "criptareandvalidare.h"
+#include "criptare_si_validare.h"
 
 vector<int> CriptareAndValidare::menu()
 {
