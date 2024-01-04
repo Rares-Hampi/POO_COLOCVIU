@@ -41,10 +41,10 @@ public:
     void showRegister()
     {
         cout << "Incepem procesul de inregistrare" << endl;
-        cout << "1. Introduceti numele: ";
-        cout << "2. Introduceti emailul: ";
-        cout << "3. Introduceti numarul de telefon: ";
-        cout << "4. Introduceti parola: ";
+        cout << "1. Introduceti numele: " << endl;
+        cout << "2. Introduceti emailul: " << endl;
+        cout << "3. Introduceti numarul de telefon: " << endl;
+        cout << "4. Introduceti parola: " << endl;
         cout << "5. Inregistrare" << endl;
         cout << "6. Inapoi" << endl;
     }
