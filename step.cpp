@@ -66,6 +66,20 @@ void Step::deleteStep(string step_name, string file_name)
     file.close();
 }
 
+void Step::showAllSteps(string file_name)
+{
+    fstream file;
+    file.open(file_name, ios::in);
+    if (file.is_open())
+    {
+        string line;
+        while (getline(file, line))
+        {
+            cout << line << endl;
+        }
+    }
+}
+
 void CalculusStep::setOperation(string operation)
 {
     this->operation = operation;
@@ -208,6 +222,7 @@ void CalculusStep::executeOperation(string operation)
 
 void CalculusStep::print()
 {
+
     cout << "Nume: " << this->nume << endl;
     cout << "Descriere: " << this->description << endl;
     cout << "Tip: " << this->type << endl;
@@ -224,17 +239,8 @@ void InputStep<T>::setInput(T input)
 template <class T>
 T InputStep<T>::getInput()
 {
-    cout << type_info(input);
-    return input;
-}
 
-template <class T>
-void InputStep<T>::print()
-{
-    cout << "Nume: " << this->nume << endl;
-    cout << "Descriere: " << this->description << endl;
-    cout << "Tip: " << this->type << endl;
-    cout << "Input: " << this->input << endl;
+    return input;
 }
 
 void OutputStep::setFile(string file)

@@ -1,5 +1,5 @@
-#ifndef FLOW.H
-#define FLOW .H
+#ifndef FLOW_H
+#define FLOW_H
 
 #include <iostream>
 #include <string>
@@ -39,6 +39,8 @@ public:
     void deleteFlow(string name);
 
     void showAllSteps(string file_name);
+
+    void showAllFlows();
 };
 
 #endif // !     FLOW.H

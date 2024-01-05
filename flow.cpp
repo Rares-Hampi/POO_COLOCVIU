@@ -62,9 +62,22 @@ void Flow::addFlow(string name, string user)
 
 void Flow::createFile(string name)
 {
-    ofstream file;
-    file.open(name + ".txt", ios::app);
-    file.close();
+    try
+    {
+        if (name == "")
+        {
+            throw runtime_error("Numele nu poate fi gol!");
+        }
+
+        string directory = "./workflows/";
+        ofstream file;
+        file.open(directory + name + ".txt", ios::app);
+        file.close();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void Flow::createStep(string name, string step_name, string step_description)
@@ -134,4 +147,19 @@ void Flow::showAllSteps(string file_name)
     {
         std::cerr << e.what() << '\n';
     }
+}
+
+void Flow::showAllFlows()
+{
+    ifstream file;
+    file.open("flows.txt");
+    if (file.is_open())
+    {
+        string line;
+        while (getline(file, line))
+        {
+            cout << line << endl;
+        }
+    }
+    file.close();
 }

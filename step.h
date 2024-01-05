@@ -15,6 +15,8 @@ public:
     virtual ~Step() {}
     virtual void print() = 0;
 
+    Step();
+
     string getNume();
 
     string getDescription();
@@ -53,10 +55,7 @@ public:
 class CalculusStep : public Step
 {
 public:
-    void print() override
-    {
-        cout << "Ai cerut sa se execute operatia: " << operation << endl;
-    }
+    void print() override;
 
     string operation;
 
@@ -77,7 +76,13 @@ template <typename T>
 class InputStep : public Step
 {
 public:
-    void print() override;
+    void print() override
+    {
+        cout << "Numele pasului este: " << nume << endl;
+        cout << "Descrierea pasului este: " << description << endl;
+        cout << "Tipul pasului este: " << type << endl;
+        cout << "Inputul pasului este: " << input << endl;
+    }
 
     T input;
 
@@ -89,10 +94,7 @@ public:
 class OutputStep : public Step
 {
 public:
-    void print() override
-    {
-        cout << "Ai cerut ca outputul sa fie: " << file << endl;
-    }
+    void print() override;
 
     string step_title;
     string file;
@@ -118,11 +120,7 @@ public:
 class FileStep : public Step
 {
 public:
-    void print()
-    {
-        cout << "Ai cerut ca fisierul sa fie: " << file << endl;
-    }
-
+    void print();
     string file;
 
     void setFile(string file);
