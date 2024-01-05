@@ -29,6 +29,8 @@ public:
 
     void writeToFile();
 
+    void deleteStep(string step_name, string file_name);
+
 protected:
     string nume;
     string description;

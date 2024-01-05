@@ -47,6 +47,23 @@ void Step::writeToFile()
     }
 }
 
+void Step::deleteStep(string step_name, string file_name)
+{
+    fstream file;
+    file.open(file_name, ios::in);
+    if (file.is_open())
+    {
+        string line;
+        while (getline(file, line))
+        {
+            if (line == step_name)
+            {
+                file << "";
+            }
+        }
+    }
+}
+
 void CalculusStep::setOperation(string operation)
 {
     this->operation = operation;

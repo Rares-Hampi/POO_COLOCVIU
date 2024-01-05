@@ -34,6 +34,8 @@ public:
 
     void createFile(string name);
 
+    void createStep(string name, string step_name, string step_description);
+
     void deleteFlow(string name);
 };
 
