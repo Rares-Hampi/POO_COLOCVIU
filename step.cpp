@@ -1,97 +1,348 @@
 #include "step.h"
 
-template <typename T>
-Step<T>::Step(string nume, string description, bool input, T type_input)
+Step::Step()
 {
-    this->nume = nume;
-    this->description = description;
-    this->input = input;
-    this->type_input = type_input;
+    this->nume = "";
+    this->description = "";
+    this->type = "";
 }
 
-template <typename T>
-string Step<T>::getNume()
+void Step::setNume(string nume)
+{
+    this->nume = nume;
+}
+
+void Step::setDescription(string description)
+{
+    this->description = description;
+}
+
+void Step::setType(string type)
+{
+    this->type = type;
+}
+
+string Step::getNume()
 {
     return this->nume;
 }
 
-template <typename T>
-string Step<T>::getDescription()
+string Step::getDescription()
 {
     return this->description;
 }
 
-template <typename T>
-bool Step<T>::getInput()
+string Step::getType()
 {
-    return this->input;
+    return this->type;
 }
 
-template <typename T>
-T Step<T>::getTypeInput()
+void Step::writeToFile()
 {
-    return this->type_input;
+    ofstream file;
+    file.open("flows.txt", ios::app);
+    if (file.is_open())
+    {
+        file << nume << description << type << endl;
+    }
 }
 
-template <typename T>
-void Step<T>::setNume(string nume)
+void CalculusStep::setOperation(string operation)
 {
-    this->nume = nume;
+    this->operation = operation;
 }
 
-template <typename T>
-void Step<T>::setDescription(string description)
+string CalculusStep::getOperation(string operation)
 {
-    this->description = description;
+    return this->operation;
 }
 
-template <typename T>
-void Step<T>::setInput(bool input)
+void CalculusStep::decideOperation(string operation)
 {
-    this->input = input;
+    try
+    {
+        regex operation_regex("(step[0-9]+) ([\\+\\-\\*\\/\\min\\max]) (step[0-9]+)");
+
+        if (regex_match(operation, operation_regex))
+        {
+            setOperation(operation);
+        }
+        else
+        {
+            throw "Nu s-a putut executa operatia";
+        }
+    }
+    catch (const char *e)
+    {
+        throw e;
+    }
 }
 
-template <typename T>
-void Step<T>::setTypeInput(T type_input)
+vector<string> CalculusStep::getStepsFromOperation(string operation)
 {
-    this->type_input = type_input;
+    vector<string> steps;
+    try
+    {
+        if (operation.empty())
+        {
+            throw "Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.";
+        }
+
+        regex step_regex("(step[0-9]+)");
+        sregex_iterator iter(operation.begin(), operation.end(), step_regex);
+        sregex_iterator end;
+
+        while (iter != end)
+        {
+            smatch match = *iter;
+            steps.push_back(match.str());
+            ++iter;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+    return steps;
 }
 
-template <typename T>
-void Step<T>::print()
+vector<int> CalculusStep::getNumberFromStep()
+{
+    vector<int> numbers;
+    try
+    {
+        vector<string> steps = getStepsFromOperation(operation);
+
+        fstream file;
+        file.open("flows.txt", ios::in);
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                if (line == steps[0])
+                {
+
+                    for (int i = 0; i < 2; i++)
+                    {
+                        getline(file, line);
+                    }
+
+                    regex number_regex("([0-9]+)");
+                    sregex_iterator iter(line.begin(), line.end(), number_regex);
+                    sregex_iterator end;
+                    smatch match = *iter;
+                    numbers.push_back(stoi(match.str()));
+                }
+            }
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void CalculusStep::executeOperation(string operation)
+{
+    try
+    {
+        vector<int> numbers = getNumberFromStep();
+        string operation_type = getOperation(operation);
+
+        if (operation_type == "+")
+        {
+            cout << numbers[0] + numbers[1] << endl;
+        }
+        else if (operation_type == "-")
+        {
+            cout << numbers[0] - numbers[1] << endl;
+        }
+        else if (operation_type == "*")
+        {
+            cout << numbers[0] * numbers[1] << endl;
+        }
+        else if (operation_type == "/")
+        {
+            cout << numbers[0] / numbers[1] << endl;
+        }
+        else if (operation_type == "min")
+        {
+            cout << min(numbers[0], numbers[1]) << endl;
+        }
+        else if (operation_type == "max")
+        {
+            cout << max(numbers[0], numbers[1]) << endl;
+        }
+        else
+        {
+            throw "Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.";
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void CalculusStep::print()
 {
     cout << "Nume: " << this->nume << endl;
     cout << "Descriere: " << this->description << endl;
+    cout << "Tip: " << this->type << endl;
+    cout << "Operatie: " << this->operation << endl;
+}
+
+template <class T>
+void InputStep<T>::setInput(T input)
+{
+
+    this->input = input;
+}
+
+template <class T>
+T InputStep<T>::getInput()
+{
+    cout << type_info(input);
+    return input;
+}
+
+template <class T>
+void InputStep<T>::print()
+{
+    cout << "Nume: " << this->nume << endl;
+    cout << "Descriere: " << this->description << endl;
+    cout << "Tip: " << this->type << endl;
     cout << "Input: " << this->input << endl;
-    cout << "Tip input: " << type(type_input) << endl;
 }
 
-template <typename T>
-void Step<T>::printInput()
+void OutputStep::setFile(string file)
 {
-    if (this->input == true)
+    this->file = file;
+}
+
+string OutputStep::getFile()
+{
+    return this->file;
+}
+
+void OutputStep::setStepTitle(string step_title)
+{
+    this->step_title = step_title;
+}
+
+string OutputStep::getStepTitle()
+{
+    return this->step_title;
+}
+
+void OutputStep::setFileDescription(string file_description)
+{
+    this->file_description = file_description;
+}
+
+string OutputStep::getFileDescription()
+{
+    return this->file_description;
+}
+
+string OutputStep::getInfoAboutStep(string step_title)
+{
+    try
     {
-        cout << "Introduceti " << this->description << ": ";
-        cin >> this->type_input;
+        if (step_title.empty())
+        {
+            throw "Nu s-a putut gasi step-ul. Step-ul trebuie sa fie de forma: step1.";
+        }
+        fstream file;
+        file.open("flows.txt", ios::in);
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                if (line == step_title)
+                {
+                    return line;
+                }
+            }
+        }
+        else
+        {
+            throw "Nu s-a putut deschide fisierul";
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
-template <typename T>
-void Step<T>::addStep(string nume, string description, bool input, T type_input)
+void OutputStep::print()
 {
-    ofstream file;
-    file.open("steps.txt", ios::app);
-    file << nume << endl;
-    file << description << endl;
-    file << input << endl;
-    if (input == true)
-    {
-        file << type_input << endl;
-    }
-    else
-    {
-        file << "0" << endl;
-    }
+    cout << "Nume: " << this->nume << endl;
+    cout << "Descriere: " << this->description << endl;
+    cout << "Tip: " << this->type << endl;
+    cout << "Fisier: " << this->file << endl;
+}
 
-    file.close();
+void OutputStep::writeToFile()
+{
+    string step_info = getInfoAboutStep(this->step_title);
+    fstream file;
+    file.open("flows.txt", ios::app);
+    if (file.is_open())
+    {
+        file << file_description << endl
+             << endl;
+        file << step_info << endl;
+    }
+}
+
+void FileStep::setFile(string file)
+{
+    this->file = file;
+}
+
+string FileStep::getFile()
+{
+    return this->file;
+}
+
+void FileStep::getFromFile(string file)
+{
+    try
+    {
+        if (file.empty())
+        {
+            throw "Nu s-a putut gasi fisierul. Fisierul trebuie sa fie de forma: fisier.txt.";
+        }
+        fstream file;
+        file.open("flows.txt", ios::in);
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                cout << line << endl;
+            }
+        }
+        else
+        {
+            throw "Nu s-a putut deschide fisierul";
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void FileStep::print()
+{
+    cout << "Nume: " << this->nume << endl;
+    cout << "Descriere: " << this->description << endl;
+    cout << "Tip: " << this->type << endl;
+    cout << "Fisier: " << this->file << endl;
 }

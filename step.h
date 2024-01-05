@@ -5,29 +5,15 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <regex>
+#include <vector>
 using namespace std;
 
-template <typename T>
-T input()
-{
-    T var;
-    cin >> var;
-    cout << type(var) << endl;
-    return var;
-}
-
-template <typename T>
 class Step
 {
-
-private:
-    string type;
-    string nume;
-    string description;
-    T type_input;
-
 public:
-    Step(string nume, string description, bool input, T type_input);
+    virtual ~Step() {}
+    virtual void print() = 0;
 
     string getNume();
 
@@ -35,29 +21,102 @@ public:
 
     string getType();
 
-    T getTypeInput();
-
     void setNume(string nume);
 
     void setDescription(string description);
 
     void setType(string type);
 
-    void setTypeInput(T type_input);
+    void writeToFile();
 
-    void print();
+protected:
+    string nume;
+    string description;
+    string type;
+};
 
-    void printInput();
+class CalculusStep : public Step
+{
+public:
+    void print() override
+    {
+        cout << "Ai cerut sa se execute operatia: " << operation << endl;
+    }
 
-    void decideStepType(string type);
+private:
+    string operation;
 
-    void addCalculusStep(string nume, string description);
+    void setOperation(string operation);
 
-    void addInputStep(string nume, string description, T type_input);
+    void decideOperation(string operation);
 
-    void addOutputStep(string nume, string description);
+    vector<string> getStepsFromOperation(string operation);
 
-    void addStep(string nume, string description);
+    string getOperation(string operation);
+
+    vector<int> getNumberFromStep();
+
+    void executeOperation(string operation);
+};
+
+template <typename T>
+class InputStep : public Step
+{
+public:
+    void print() override;
+
+private:
+    T input;
+
+    void setInput(T input);
+
+    T getInput();
+};
+
+class OutputStep : public Step
+{
+public:
+    void print() override
+    {
+        cout << "Ai cerut ca outputul sa fie: " << file << endl;
+    }
+
+private:
+    string step_title;
+    string file;
+    string file_description;
+
+    void setFile(string file);
+
+    string getFile();
+
+    void setStepTitle(string step_title);
+
+    string getStepTitle();
+
+    void setFileDescription(string file_description);
+
+    string getFileDescription();
+
+    string getInfoAboutStep(string step_title);
+
+    void writeToFile();
+};
+
+class FileStep : public Step
+{
+public:
+    void print()
+    {
+        cout << "Ai cerut ca fisierul sa fie: " << file << endl;
+    }
+
+private:
+    string file;
+
+    void setFile(string file);
+    string getFile();
+    void getFromFile(string file);
 };
 
 #endif // !STEP_H
