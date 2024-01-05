@@ -33,6 +33,8 @@ public:
     void addFlow(string name, string user);
 
     void createFile(string name);
+
+    void deleteFlow(string name);
 };
 
 #endif // !     FLOW.H

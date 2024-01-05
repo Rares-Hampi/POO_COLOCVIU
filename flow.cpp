@@ -55,3 +55,40 @@ void Flow::createFile(string name)
     file.open(name + ".txt", ios::app);
     file.close();
 }
+
+void Flow::createStep(string name, string step_name, string step_description)
+{
+    ofstream file;
+    file.open(name + ".txt", ios::app);
+    file << step_name << endl;
+    file << step_description << endl;
+    file << endl;
+    file.close();
+}
+
+void Flow::deleteFlow(string name)
+{
+    string line;
+    ifstream file;
+    ofstream temp;
+    file.open("flows.txt");
+    temp.open("temp.txt");
+    while (getline(file, line))
+    {
+        if (line != name)
+        {
+            temp << line << endl;
+        }
+        else
+        {
+            getline(file, line);
+            getline(file, line);
+            getline(file, line);
+        }
+    }
+    file.close();
+    temp.close();
+    remove("flows.txt");
+    rename("temp.txt", "flows.txt");
+    remove((name + ".txt").c_str());
+}
