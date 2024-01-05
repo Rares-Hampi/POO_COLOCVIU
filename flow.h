@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <chrono>
+#include <ctime>
 
 #include "step.h"
 #include "user.h"
@@ -30,7 +32,7 @@ public:
 
     int getStepNumber();
 
-    void addFlow(string name, string user);
+    void addFlow(string name, string user, int number);
 
     void createFile(string name);
 

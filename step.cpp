@@ -9,17 +9,17 @@ Step::Step()
 
 void Step::setNume(string name)
 {
-    nume = name;
+    this->nume = name;
 }
 
 void Step::setDescription(string description)
 {
-    description = description;
+    this->description = description;
 }
 
 void Step::setType(string type)
 {
-    type = type;
+    this->type = type;
 }
 
 string Step::getNume()
@@ -37,18 +37,56 @@ string Step::getType()
     return type;
 }
 
-void Step::writeToFile()
+void Step::writeToFile(string file_name)
 {
+    string directory = "./workflows/";
     ofstream file;
-    file.open("flows.txt", ios::app);
+    file.open(directory + file_name, ios::app);
     if (file.is_open())
     {
-        file << nume << description << type << endl;
+        file << nume << "," << description << "," << type << endl;
     }
 }
 
 void Step::deleteStep(string step_name, string file_name)
 {
+    string directory = "./workflows/";
+    try
+    {
+        fstream file;
+        file.open(directory + file_name + ".csv", ios::in);
+        ofstream temp;
+        temp.open("./workflows/temp.csv", ios::out);
+        if (!file.good())
+        {
+            throw runtime_error("Nu s-a putut deschide fisierul");
+        }
+        if (file.is_open() && temp.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                stringstream ss(line);
+                string name;
+                getline(ss, name, ',');
+                cout << name << endl;
+                if (name != step_name)
+                {
+                    temp << line << endl;
+                }
+            }
+        }
+
+        file.close();
+        temp.close();
+        remove((directory + file_name + ".csv").c_str());
+        rename("./workflows/temp.csv", (directory + file_name + ".csv").c_str());
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
     fstream file;
     file.open(file_name, ios::in);
     if (file.is_open())
@@ -68,8 +106,9 @@ void Step::deleteStep(string step_name, string file_name)
 
 void Step::showAllSteps(string file_name)
 {
+    string directory = "./workflows/";
     fstream file;
-    file.open(file_name, ios::in);
+    file.open(directory + file_name + ".csv", ios::in);
     if (file.is_open())
     {
         string line;

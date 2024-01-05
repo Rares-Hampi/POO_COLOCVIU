@@ -26,7 +26,7 @@ public:
 
     void setType(string type);
 
-    void writeToFile();
+    void writeToFile(string file_name);
 
     void deleteStep(string step_name, string file_name);
 
@@ -35,11 +35,6 @@ public:
     string nume;
     string description;
     string type;
-};
-
-class SimpleStep : public Step
-{
-public:
 };
 
 class CalculusStep : public Step
@@ -98,7 +93,7 @@ public:
 class FileStep : public Step
 {
 public:
-        string file;
+    string file;
 
     void setFile(string file);
     string getFile();

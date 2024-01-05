@@ -1,6 +1,4 @@
 #include "flow.h"
-#include <chrono>
-#include <ctime>
 
 Flow::Flow()
 {
@@ -48,13 +46,12 @@ string currentDateTime()
     return dateTime;
 }
 
-void Flow::addFlow(string name, string user)
+void Flow::addFlow(string name, string user, int number)
 {
 
     ofstream file;
-    file.open("flows.txt", ios::app);
-    file << name << endl;
-    file << user << endl;
+    file.open("flows.csv", ios::app);
+    file << name << "," << number << "," << user << "," << currentDateTime() << endl;
     file << currentDateTime() << endl;
     file << endl;
     file.close();
@@ -71,7 +68,12 @@ void Flow::createFile(string name)
 
         string directory = "./workflows/";
         ofstream file;
-        file.open(directory + name + ".txt", ios::app);
+        file.open(directory + name + ".csv", ios::app);
+        file << "name"
+             << ","
+             << "descriprion"
+             << ","
+             << "type" << endl;
         file.close();
     }
     catch (const std::exception &e)
@@ -93,29 +95,45 @@ void Flow::createStep(string name, string step_name, string step_description)
 void Flow::deleteFlow(string name)
 
 {
+    string directory = "./workflows/";
     string line;
-    ifstream file;
-    ofstream temp;
-    file.open("flows.txt");
-    temp.open("temp.txt");
-    while (getline(file, line))
+    try
     {
-        if (line != name)
+
+        ifstream file;
+        ofstream temp;
+        file.open("flows.csv", ios::in);
+        temp.open("temp.csv", ios::out);
+
+        if (!file.good())
         {
-            temp << line << endl;
+            throw runtime_error("Nu s-a putut deschide fisierul");
         }
-        else
+
+        if (file.is_open() && temp.is_open())
         {
-            getline(file, line);
-            getline(file, line);
-            getline(file, line);
+            while (getline(file, line))
+            {
+                stringstream ss(line);
+                string nume;
+                getline(ss, nume, ',');
+                cout << nume << endl;
+                if (nume != name)
+                {
+                    temp << line << endl;
+                }
+            }
         }
+        file.close();
+        temp.close();
     }
-    file.close();
-    temp.close();
-    remove("flows.txt");
-    rename("temp.txt", "flows.txt");
-    remove((name + ".txt").c_str());
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    remove("flows.csv");
+    rename("temp.csv", "flows.csv");
+    remove((directory + name + ".csv").c_str());
 }
 
 void Flow::showAllSteps(string file_name)
@@ -152,7 +170,7 @@ void Flow::showAllSteps(string file_name)
 void Flow::showAllFlows()
 {
     ifstream file;
-    file.open("flows.txt");
+    file.open("flows.csv");
     if (file.is_open())
     {
         string line;
