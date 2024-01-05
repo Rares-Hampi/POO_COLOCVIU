@@ -16,7 +16,6 @@ class Flow
 
 private:
     User user;
-    Step<string> step;
     string name;
     int step_number;
 
@@ -32,6 +31,8 @@ public:
     int getStepNumber();
 
     void addFlow(string name, string user);
+
+    void createFile(string name);
 };
 
 #endif // !     FLOW.H

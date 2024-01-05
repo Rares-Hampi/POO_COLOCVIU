@@ -48,3 +48,10 @@ void Flow::addFlow(string name, string user)
     file << endl;
     file.close();
 }
+
+void Flow::createFile(string name)
+{
+    ofstream file;
+    file.open(name + ".txt", ios::app);
+    file.close();
+}
