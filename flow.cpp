@@ -10,7 +10,18 @@ Flow::Flow()
 
 void Flow::setName(string name)
 {
-    this->name = name;
+    try
+    {
+        if (name == "")
+        {
+            throw runtime_error("Numele nu poate fi gol!");
+        }
+        this->name = name;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void Flow::setStepNumber(int step_number)
@@ -67,6 +78,7 @@ void Flow::createStep(string name, string step_name, string step_description)
 }
 
 void Flow::deleteFlow(string name)
+
 {
     string line;
     ifstream file;
@@ -91,4 +103,35 @@ void Flow::deleteFlow(string name)
     remove("flows.txt");
     rename("temp.txt", "flows.txt");
     remove((name + ".txt").c_str());
+}
+
+void Flow::showAllSteps(string file_name)
+{
+    try
+    {
+
+        if (file_name == "")
+        {
+            throw runtime_error("Nu exista niciun flow cu acest nume!");
+        }
+        ifstream file;
+        if (!file.good())
+        {
+            throw runtime_error("Nu exista niciun flow cu acest nume!");
+        }
+        file.open(file_name);
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                cout << line << endl;
+            }
+        }
+        file.close();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }

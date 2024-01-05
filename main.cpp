@@ -1,6 +1,8 @@
 #include <iostream>
 #include "user.h"
 #include "criptare_si_validare.h"
+#include "flow.h"
+#include "step.h"
 
 using namespace std;
 
@@ -69,18 +71,11 @@ public:
     void showCreateWorkflow()
     {
         cout << "Sa incepem!" << endl;
-        cout << "Ce tip de workflow doriti sa creati?" << endl;
-        cout << "1. Workflow tip lista de cumparaturi" << endl;
-        cout << "2. Workflow tip organizare eveniment" << endl;
-        cout << "3. Workflow custom" << endl;
-        cout << "4. Inapoi" << endl;
-    }
-
-    void showShoppingListWorkflow()
-    {
-        cout << "Workflow tip lista de cumparaturi" << endl;
-        cout << "1. Adaugare task" << endl;
-        cout << "2. Inapoi" << endl;
+        cout << "1. Cate taskuri doriti sa aiba acest workflow? :" << endl;
+        cout << "2. Adaugare task" << endl;
+        cout << "3. Sterege task" << endl;
+        cout << "4. Afisare taskuri" << endl;
+        cout << "5. Inapoi" << endl;
     }
 
     void showAddTask()
@@ -91,21 +86,6 @@ public:
         cout << "3. Taskul are nevoie de un input? (y/n): ";
         cout << "4. Adaugare task" << endl;
         cout << "5. Inapoi" << endl;
-    }
-
-    void showEventWorkflow()
-    {
-        cout << "Workflow tip organizare eveniment" << endl;
-        cout << "1. Adaugare task" << endl;
-        cout << "2. Inapoi" << endl;
-    }
-
-    void showCustomWorkflow()
-    {
-        cout << "Workflow custom" << endl;
-        cout << "1. Cate taskuri doriti sa aiba acest workflow? :" << endl;
-        cout << "2. Adaugare task" << endl;
-        cout << "3. Inapoi" << endl;
     }
 
     void showDeleteWorkflow()
@@ -410,6 +390,18 @@ public:
                 string option2;
                 do
                 {
+                    try
+                    {
+                        cout << "Ce nume doriti sa aiba workflowul?" << endl;
+                        string name;
+                        cin >> name;
+                        flow.setName(name);
+                    }
+                    catch (const std::exception &e)
+                    {
+                        std::cerr << e.what() << '\n';
+                    }
+
                     option2 = menu.getOption();
                     if (option2 == "1")
                     {
@@ -420,38 +412,202 @@ public:
                             option3 = menu.getOption();
                             if (option3 == "1")
                             {
-                                menu.showAddTask();
-                                string option4;
-                                do
+                                try
                                 {
-                                    option4 = menu.getOption();
-                                    if (option4 == "1")
+                                    cout << "Stiti cate taskuri doriti sa aiba acest workflow? (y/n): ";
+                                    string option4;
+                                    cin >> option4;
+
+                                    if (option4 == "n")
                                     {
-                                        cout << "Numele taskului este: ";
+                                        cout << "Nu este nicio problema, puteti aduga taskuri pe parcurs" << endl;
+                                        flow.setStepNumber(0);
                                     }
-                                    else if (option4 == "2")
+                                    else
                                     {
-                                        cout << "Descrierea taskului este: ";
+                                        cout << "Cate taskuri doriti sa aiba acest workflow? :" << endl;
+                                        int number_of_tasks;
+                                        cin >> number_of_tasks;
+                                        if (number_of_tasks < 0)
+                                        {
+                                            throw "Numarul de taskuri nu poate fi negativ";
+                                        }
+                                        else if (number_of_tasks == 0)
+                                        {
+                                            throw "Nu ati introdus niciun task";
+                                        }
+                                        flow.setStepNumber(number_of_tasks);
+
+                                        cout << "Ati ales sa aveti " << number_of_tasks << " taskuri" << endl;
+
+                                        for (int i = 0; i < number_of_tasks; i++)
+                                        {
+                                            int err = 0;
+                                            cout << "Taskul " << i + 1 << endl;
+
+                                            do
+                                            {
+                                                cout << "Numele taskului este: ";
+                                                string name;
+                                                cin >> name;
+                                                if (name.empty())
+                                                {
+                                                    cout << "Numele nu poate fi gol" << endl;
+                                                    err = 1;
+                                                }
+                                                else
+                                                {
+                                                    step->setNume(name);
+                                                    err = 0;
+                                                }
+
+                                            } while (err == 1);
+
+                                            do
+                                            {
+                                                cout << "Descrierea taskului este: ";
+                                                string description;
+                                                cin >> description;
+                                                if (description.empty())
+                                                {
+                                                    cout << "Descrierea nu poate fi goala" << endl;
+                                                    err = 1;
+                                                }
+                                                else
+                                                {
+                                                    step->setDescription(description);
+                                                    err = 0;
+                                                }
+
+                                            } while (err == 1);
+
+                                            do
+                                            {
+                                                cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file): ";
+                                                string type;
+                                                cin >> type;
+                                                if (type.empty())
+                                                {
+                                                    cout << "Tipul nu poate fi gol" << endl;
+                                                    err = 1;
+                                                }
+                                                else
+                                                {
+                                                    step->setType(type);
+                                                    err = 0;
+                                                }
+
+                                            } while (err == 1);
+
+                                            step->writeToFile();
+                                        }
                                     }
-                                    else if (option4 == "3")
-                                    {
-                                        cout << "Taskul are nevoie de un input? (y/n): ";
-                                    }
-                                    else if (option4 == "4")
-                                    {
-                                        cout << "Adaugare task" << endl;
-                                    }
-                                    else if (option4 == "5")
-                                    {
-                                        cout << "Inapoi" << endl;
-                                    }
-                                } while (option4 != "5");
+                                }
+                                catch (const std::exception &e)
+                                {
+                                    std::cerr << e.what() << '\n';
+                                }
                             }
                             else if (option3 == "2")
                             {
+                                menu.showAddTask();
+                                string option4;
+
+                                int err = 0;
+                                do
+                                {
+                                    cout << "Numele taskului este: ";
+                                    string name;
+                                    cin >> name;
+                                    if (name.empty())
+                                    {
+                                        cout << "Numele nu poate fi gol" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        step->setNume(name);
+                                        err = 0;
+                                    }
+
+                                } while (err == 1);
+
+                                do
+                                {
+                                    cout << "Descrierea taskului este: ";
+                                    string description;
+                                    cin >> description;
+                                    if (description.empty())
+                                    {
+                                        cout << "Descrierea nu poate fi goala" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        step->setDescription(description);
+                                        err = 0;
+                                    }
+
+                                } while (err == 1);
+
+                                do
+                                {
+                                    cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file): ";
+                                    string type;
+                                    cin >> type;
+                                    if (type.empty())
+                                    {
+                                        cout << "Tipul nu poate fi gol" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        step->setType(type);
+                                        err = 0;
+                                    }
+
+                                } while (err == 1);
+
+                                step->writeToFile();
+                            }
+                            else if (option3 == "3")
+                            {
+                                string step_name;
+                                int err = 0;
+                                do
+                                {
+                                    cout << "Introdu numele taskului pe care vrei sa il stergi: ";
+                                    cin >> step_name;
+                                    if (step_name.empty())
+                                    {
+                                        cout << "Numele nu poate fi gol" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        step->deleteStep(step_name, flow.getName() + ".txt");
+                                        err = 0;
+                                    }
+                                } while (err == 1);
+                            }
+
+                            else if (option3 == "4")
+                            {
+                                try
+                                {
+                                    flow.showAllSteps(flow.getName() + ".txt");
+                                }
+                                catch (const std::exception &e)
+                                {
+                                    std::cerr << e.what() << '\n';
+                                }
+                            }
+
+                            else if (option3 == "5")
+                            {
                                 cout << "Inapoi" << endl;
                             }
-                        } while (option3 != "2");
+                        } while (option3 != "5");
                     }
                     else if (option2 == "2")
                     {
@@ -539,7 +695,6 @@ public:
 
                         } while (option3 != "2");
                     }
-
                 } while (option != "6");
             }
             else if (option == "5")
@@ -598,6 +753,12 @@ public:
 private:
     Menu menu;
     User user;
+    Flow flow;
+    CalculusStep calculusStep;
+    InputStep<string> inputStep;
+    InputStep<int> inputStepInt;
+    FileStep fileStep;
+    Step *step;
 };
 
 int main()

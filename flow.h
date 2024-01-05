@@ -37,6 +37,8 @@ public:
     void createStep(string name, string step_name, string step_description);
 
     void deleteFlow(string name);
+
+    void showAllSteps(string file_name);
 };
 
 #endif // !     FLOW.H

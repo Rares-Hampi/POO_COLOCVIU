@@ -31,10 +31,23 @@ public:
 
     void deleteStep(string step_name, string file_name);
 
+    void showAllSteps(string file_name);
+
 protected:
     string nume;
     string description;
     string type;
+};
+
+class SimpleStep : public Step
+{
+public:
+    void print() override
+    {
+        cout << "Numele pasului este: " << nume << endl;
+        cout << "Descrierea pasului este: " << description << endl;
+        cout << "Tipul pasului este: " << type << endl;
+    }
 };
 
 class CalculusStep : public Step
@@ -45,12 +58,11 @@ public:
         cout << "Ai cerut sa se execute operatia: " << operation << endl;
     }
 
-private:
     string operation;
 
     void setOperation(string operation);
 
-    void decideOperation(string operation);
+    bool decideOperation(string operation);
 
     vector<string> getStepsFromOperation(string operation);
 
@@ -67,7 +79,6 @@ class InputStep : public Step
 public:
     void print() override;
 
-private:
     T input;
 
     void setInput(T input);
@@ -83,7 +94,6 @@ public:
         cout << "Ai cerut ca outputul sa fie: " << file << endl;
     }
 
-private:
     string step_title;
     string file;
     string file_description;
@@ -113,7 +123,6 @@ public:
         cout << "Ai cerut ca fisierul sa fie: " << file << endl;
     }
 
-private:
     string file;
 
     void setFile(string file);

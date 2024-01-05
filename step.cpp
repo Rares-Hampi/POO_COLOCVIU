@@ -62,6 +62,8 @@ void Step::deleteStep(string step_name, string file_name)
             }
         }
     }
+
+    file.close();
 }
 
 void CalculusStep::setOperation(string operation)
@@ -74,7 +76,7 @@ string CalculusStep::getOperation(string operation)
     return this->operation;
 }
 
-void CalculusStep::decideOperation(string operation)
+bool CalculusStep::decideOperation(string operation)
 {
     try
     {
@@ -83,6 +85,7 @@ void CalculusStep::decideOperation(string operation)
         if (regex_match(operation, operation_regex))
         {
             setOperation(operation);
+            return true;
         }
         else
         {
