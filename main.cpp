@@ -71,11 +71,12 @@ public:
     void showCreateWorkflow()
     {
         cout << "Sa incepem!" << endl;
-        cout << "1. Cate taskuri doriti sa aiba acest workflow? :" << endl;
-        cout << "2. Adaugare task" << endl;
-        cout << "3. Sterege task" << endl;
-        cout << "4. Afisare taskuri" << endl;
-        cout << "5. Inapoi" << endl;
+        cout << "1. Ce nume doriti sa aiba workflowul?" << endl;
+        cout << "2. Cate taskuri doriti sa aiba acest workflow? :" << endl;
+        cout << "3. Adaugare task" << endl;
+        cout << "4. Sterege task" << endl;
+        cout << "5. Afisare taskuri" << endl;
+        cout << "6. Inapoi" << endl;
     }
 
     void showAddTask()
@@ -365,23 +366,26 @@ public:
                 string option2;
                 do
                 {
-                    // ! set workflow name
-                    try
-                    {
-                        cout << "Ce nume doriti sa aiba workflowul?" << endl;
-                        string name;
-                        cin >> name;
-                        flow.setName(name);
-                        flow.createFile(name);
-                    }
-                    catch (const std::exception &e)
-                    {
-                        std::cerr << e.what() << '\n';
-                    }
-
-                    //! set workflow steps
                     option2 = menu.getOption();
+                    // ! set workflow name
                     if (option2 == "1")
+                    {
+                        try
+                        {
+                            cout << "Ce nume doriti sa aiba workflowul?" << endl;
+                            string name;
+                            cin >> name;
+                            flow.setName(name);
+                            flow.createFile(name);
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
+                    }
+                    //! set workflow steps
+
+                    else if (option2 == "2")
                     {
                         try
                         {
@@ -434,7 +438,7 @@ public:
                                         }
                                         else
                                         {
-                                            step->setNume(name);
+                                            step.setNume(name);
                                             err = 0;
                                         }
 
@@ -453,7 +457,7 @@ public:
                                         }
                                         else
                                         {
-                                            step->setDescription(description);
+                                            step.setDescription(description);
                                             err = 0;
                                         }
 
@@ -472,13 +476,13 @@ public:
                                         }
                                         else
                                         {
-                                            step->setType(type);
+                                            step.setType(type);
                                             err = 0;
                                         }
 
                                     } while (err == 1);
 
-                                    step->writeToFile();
+                                    step.writeToFile();
                                 }
                             }
                         }
@@ -489,7 +493,7 @@ public:
                     }
 
                     // ! add steps manual, one by one
-                    else if (option2 == "2")
+                    else if (option2 == "3")
                     {
 
                         int err = 0;
@@ -509,7 +513,7 @@ public:
                             }
                             else
                             {
-                                step->setNume(name);
+                                step.setNume(name);
                                 err = 0;
                             }
 
@@ -528,7 +532,7 @@ public:
                             }
                             else
                             {
-                                step->setDescription(description);
+                                step.setDescription(description);
                                 err = 0;
                             }
 
@@ -547,24 +551,24 @@ public:
                             }
                             else
                             {
-                                step->setType(type);
+                                step.setType(type);
                                 err = 0;
                             }
 
                         } while (err == 1);
 
-                        step->writeToFile();
+                        step.writeToFile();
                     }
 
                     // ! delete a step
-                    else if (option2 == "3")
+                    else if (option2 == "4")
                     {
                         try
                         {
                             string step_name;
                             cout << "Ce task doriti sa stergeti?" << endl;
                             cin >> step_name;
-                            step->deleteStep(step_name, flow.getName());
+                            step.deleteStep(step_name, flow.getName());
                         }
                         catch (const std::exception &e)
                         {
@@ -573,11 +577,11 @@ public:
                     }
 
                     // ! show all steps
-                    else if (option2 == "4")
+                    else if (option2 == "5")
                     {
                         try
                         {
-                            step->showAllSteps(flow.getName());
+                            step.showAllSteps(flow.getName());
                         }
                         catch (const std::exception &e)
                         {
@@ -585,11 +589,11 @@ public:
                         }
                     }
 
-                    else if (option2 == "5")
+                    else if (option2 == "6")
                     {
                         cout << "Inapoi" << endl;
                     }
-                } while (option2 != "5");
+                } while (option2 != "6");
             }
             // delete workflow
             else if (option == "5")
@@ -652,7 +656,7 @@ private:
     InputStep<string> inputStep;
     InputStep<int> inputStepInt;
     FileStep fileStep;
-    Step *step;
+    Step step;
 };
 
 int main()

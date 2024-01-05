@@ -12,9 +12,6 @@ using namespace std;
 class Step
 {
 public:
-    virtual ~Step() {}
-    virtual void print() = 0;
-
     Step();
 
     string getNume();
@@ -35,7 +32,6 @@ public:
 
     void showAllSteps(string file_name);
 
-protected:
     string nume;
     string description;
     string type;
@@ -44,19 +40,11 @@ protected:
 class SimpleStep : public Step
 {
 public:
-    void print() override
-    {
-        cout << "Numele pasului este: " << nume << endl;
-        cout << "Descrierea pasului este: " << description << endl;
-        cout << "Tipul pasului este: " << type << endl;
-    }
 };
 
 class CalculusStep : public Step
 {
 public:
-    void print() override;
-
     string operation;
 
     void setOperation(string operation);
@@ -76,14 +64,6 @@ template <typename T>
 class InputStep : public Step
 {
 public:
-    void print() override
-    {
-        cout << "Numele pasului este: " << nume << endl;
-        cout << "Descrierea pasului este: " << description << endl;
-        cout << "Tipul pasului este: " << type << endl;
-        cout << "Inputul pasului este: " << input << endl;
-    }
-
     T input;
 
     void setInput(T input);
@@ -94,8 +74,6 @@ public:
 class OutputStep : public Step
 {
 public:
-    void print() override;
-
     string step_title;
     string file;
     string file_description;
@@ -120,8 +98,7 @@ public:
 class FileStep : public Step
 {
 public:
-    void print();
-    string file;
+        string file;
 
     void setFile(string file);
     string getFile();

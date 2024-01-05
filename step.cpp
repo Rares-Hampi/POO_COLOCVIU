@@ -2,39 +2,39 @@
 
 Step::Step()
 {
-    this->nume = "";
-    this->description = "";
-    this->type = "";
+    nume = "";
+    description = "";
+    type = "";
 }
 
-void Step::setNume(string nume)
+void Step::setNume(string name)
 {
-    this->nume = nume;
+    nume = name;
 }
 
 void Step::setDescription(string description)
 {
-    this->description = description;
+    description = description;
 }
 
 void Step::setType(string type)
 {
-    this->type = type;
+    type = type;
 }
 
 string Step::getNume()
 {
-    return this->nume;
+    return nume;
 }
 
 string Step::getDescription()
 {
-    return this->description;
+    return description;
 }
 
 string Step::getType()
 {
-    return this->type;
+    return type;
 }
 
 void Step::writeToFile()
@@ -82,12 +82,12 @@ void Step::showAllSteps(string file_name)
 
 void CalculusStep::setOperation(string operation)
 {
-    this->operation = operation;
+    operation = operation;
 }
 
 string CalculusStep::getOperation(string operation)
 {
-    return this->operation;
+    return operation;
 }
 
 bool CalculusStep::decideOperation(string operation)
@@ -220,20 +220,11 @@ void CalculusStep::executeOperation(string operation)
     }
 }
 
-void CalculusStep::print()
-{
-
-    cout << "Nume: " << this->nume << endl;
-    cout << "Descriere: " << this->description << endl;
-    cout << "Tip: " << this->type << endl;
-    cout << "Operatie: " << this->operation << endl;
-}
-
 template <class T>
 void InputStep<T>::setInput(T input)
 {
 
-    this->input = input;
+    input = input;
 }
 
 template <class T>
@@ -245,32 +236,32 @@ T InputStep<T>::getInput()
 
 void OutputStep::setFile(string file)
 {
-    this->file = file;
+    file = file;
 }
 
 string OutputStep::getFile()
 {
-    return this->file;
+    return file;
 }
 
 void OutputStep::setStepTitle(string step_title)
 {
-    this->step_title = step_title;
+    step_title = step_title;
 }
 
 string OutputStep::getStepTitle()
 {
-    return this->step_title;
+    return step_title;
 }
 
 void OutputStep::setFileDescription(string file_description)
 {
-    this->file_description = file_description;
+    file_description = file_description;
 }
 
 string OutputStep::getFileDescription()
 {
-    return this->file_description;
+    return file_description;
 }
 
 string OutputStep::getInfoAboutStep(string step_title)
@@ -305,17 +296,9 @@ string OutputStep::getInfoAboutStep(string step_title)
     }
 }
 
-void OutputStep::print()
-{
-    cout << "Nume: " << this->nume << endl;
-    cout << "Descriere: " << this->description << endl;
-    cout << "Tip: " << this->type << endl;
-    cout << "Fisier: " << this->file << endl;
-}
-
 void OutputStep::writeToFile()
 {
-    string step_info = getInfoAboutStep(this->step_title);
+    string step_info = getInfoAboutStep(step_title);
     fstream file;
     file.open("flows.txt", ios::app);
     if (file.is_open())
@@ -328,12 +311,12 @@ void OutputStep::writeToFile()
 
 void FileStep::setFile(string file)
 {
-    this->file = file;
+    file = file;
 }
 
 string FileStep::getFile()
 {
-    return this->file;
+    return file;
 }
 
 void FileStep::getFromFile(string file)
@@ -363,12 +346,4 @@ void FileStep::getFromFile(string file)
     {
         std::cerr << e.what() << '\n';
     }
-}
-
-void FileStep::print()
-{
-    cout << "Nume: " << this->nume << endl;
-    cout << "Descriere: " << this->description << endl;
-    cout << "Tip: " << this->type << endl;
-    cout << "Fisier: " << this->file << endl;
 }
