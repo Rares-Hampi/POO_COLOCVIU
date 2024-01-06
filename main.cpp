@@ -485,7 +485,7 @@ public:
                                     // set the type of the task
                                     do
                                     {
-                                        cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file): ";
+                                        cout << "Ce tip de task doresti sa fie? (title/text/calculus/input/file/output/display/end): ";
 
                                         cin >> type;
                                         if (type.empty())
@@ -561,7 +561,7 @@ public:
                         // set the type of the task
                         do
                         {
-                            cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file): ";
+                            cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file/output/display/end): ";
                             cin >> type;
                             if (type.empty())
                             {

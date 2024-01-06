@@ -182,15 +182,17 @@ vector<string> CalculusStep::getStepsFromOperation(string operation)
     return steps;
 }
 
-vector<int> CalculusStep::getNumberFromStep()
+vector<float> CalculusStep::getNumberFromStep()
 {
     vector<int> numbers;
+    string directory = "./workflows/";
+    Flow flow;
     try
     {
         vector<string> steps = getStepsFromOperation(operation);
 
         fstream file;
-        file.open("flows.txt", ios::in);
+        file.open(directory + flow.getName() + ".csv", ios::in);
         if (file.is_open())
         {
             string line;
@@ -223,16 +225,21 @@ void CalculusStep::executeOperation(string operation)
 {
     try
     {
-        vector<int> numbers = getNumberFromStep();
+        vector<float> numbers = getNumberFromStep();
         string operation_type = getOperation(operation);
+        float result;
 
         if (operation_type == "+")
         {
             cout << numbers[0] + numbers[1] << endl;
+            result = numbers[0] + numbers[1];
+            setResult(result);
         }
         else if (operation_type == "-")
         {
             cout << numbers[0] - numbers[1] << endl;
+            result = numbers[0] - numbers[1];
+            setResult(result);
         }
         else if (operation_type == "*")
         {
@@ -241,14 +248,20 @@ void CalculusStep::executeOperation(string operation)
         else if (operation_type == "/")
         {
             cout << numbers[0] / numbers[1] << endl;
+            result = numbers[0] / numbers[1];
+            setResult(result);
         }
         else if (operation_type == "min")
         {
             cout << min(numbers[0], numbers[1]) << endl;
+            result = min(numbers[0], numbers[1]);
+            setResult(result);
         }
         else if (operation_type == "max")
         {
             cout << max(numbers[0], numbers[1]) << endl;
+            result = max(numbers[0], numbers[1]);
+            setResult(result);
         }
         else
         {
@@ -259,6 +272,11 @@ void CalculusStep::executeOperation(string operation)
     {
         std::cerr << e.what() << '\n';
     }
+}
+
+void CalculusStep::setResult(float number)
+{
+    this->result = number;
 }
 
 template <class T>
@@ -388,3 +406,42 @@ void FileStep::getFromFile(string file)
         std::cerr << e.what() << '\n';
     }
 }
+
+void DisplayStep::setStepTitle(string step_title)
+{
+    this->step_title = step_title;
+}
+
+void DisplayStep::displayFile(string file_name)
+{
+    string directory = "./workflows/";
+    try
+    {
+
+        fstream file;
+        file.open(directory + file_name + ".csv", ios::in);
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                cout << line << endl;
+            }
+        }
+        else
+        {
+            throw "Nu s-a putut deschide fisierul";
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void EndStep::endProgram()
+{
+    exit(0);
+}
+
+//
