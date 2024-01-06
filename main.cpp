@@ -62,38 +62,28 @@ public:
 
     void showRunWorkflow()
     {
-        cout << "Rulare workflow" << endl;
-        cout << "1. Afisare workflows" << endl;
-        cout << "2. Alege workflow" << endl;
+        cout << "Incepem procesul de rulare a flow-urilor" << endl;
+        cout << "1. Afisare flows" << endl;
+        cout << "2. Start flow" << endl;
         cout << "3. Inapoi" << endl;
     }
 
     void showCreateWorkflow()
     {
-        cout << "Sa incepem!" << endl;
-        cout << "1. Ce nume doriti sa aiba workflowul?" << endl;
-        cout << "2. Cate taskuri doriti sa aiba acest workflow? :" << endl;
+        cout << "Incepem procesul de creare a unui flow" << endl;
+        cout << "1. Introduceti numele: " << endl;
+        cout << "2. Introduce numarul de taskuri :" << endl;
         cout << "3. Adaugare task" << endl;
         cout << "4. Sterege task" << endl;
         cout << "5. Afisare taskuri" << endl;
         cout << "6. Inapoi" << endl;
     }
 
-    void showAddTask()
-    {
-        cout << "Adaugare task" << endl;
-        cout << "1. Introduceti numele taskului: ";
-        cout << "2. Introduceti descrierea taskului: ";
-        cout << "3. Taskul are nevoie de un input? (y/n): ";
-        cout << "4. Adaugare task" << endl;
-        cout << "5. Inapoi" << endl;
-    }
-
     void showDeleteWorkflow()
     {
-        cout << "Sterge workflow" << endl;
-        cout << "1. Afisare workflows" << endl;
-        cout << "2. Sterge workflow" << endl;
+        cout << "Incepem procesul de sterge a flow-urilor" << endl;
+        cout << "1. Afisare flows" << endl;
+        cout << "2. Sterge flow" << endl;
         cout << "3. Inapoi" << endl;
     }
 
@@ -118,8 +108,8 @@ public:
 
     void run()
     {
-        string option;
 
+        string option;
         do
         {
             menu.showStart();
@@ -336,18 +326,36 @@ public:
             // run workflow
             else if (option == "3")
             {
-                menu.showRunWorkflow();
+
                 string option2;
                 do
                 {
+                    menu.showRunWorkflow();
                     option2 = menu.getOption();
                     if (option2 == "1")
                     {
-                        cout << "Afisare workflows" << endl;
+                        try
+                        {
+                            flow.showAllFlows();
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                     else if (option2 == "2")
                     {
-                        cout << "Alege workflow" << endl;
+                        try
+                        {
+                            string name;
+                            cout << "Ce flow doriti sa rulati?" << endl;
+                            cin >> name;
+                            flow.runFlow(name);
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                     else if (option2 == "3")
                     {

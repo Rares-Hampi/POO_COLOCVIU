@@ -18,6 +18,13 @@ class Flow
 
 private:
     User user;
+    Step step;
+    CalculusStep calculusStep;
+    InputStep<int> inputStepInt;
+    InputStep<string> inputStepString;
+    FileStep fileStep;
+    OutputStep outputStep;
+
     string name;
     int step_number;
 
@@ -43,6 +50,8 @@ public:
     void showAllSteps(string file_name);
 
     void showAllFlows();
+
+    void runFlow(string name);
 };
 
 #endif // !     FLOW.H

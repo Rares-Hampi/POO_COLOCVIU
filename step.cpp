@@ -142,7 +142,9 @@ bool CalculusStep::decideOperation(string operation)
         }
         else
         {
+
             throw "Nu s-a putut executa operatia";
+            return false;
         }
     }
     catch (const char *e)
@@ -263,7 +265,7 @@ template <class T>
 void InputStep<T>::setInput(T input)
 {
 
-    input = input;
+    this->input = input;
 }
 
 template <class T>
