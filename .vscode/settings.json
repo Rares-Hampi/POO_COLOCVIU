@@ -55,6 +55,9 @@
         "streambuf": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "valarray": "cpp"
-    }
+        "valarray": "cpp",
+        "chrono": "cpp",
+        "ratio": "cpp"
+    },
+    "cmake.sourceDirectory": "/home/hampi-rares/Desktop/colcviu_poo/mongo-cxx-driver-r3.9.0"
 }

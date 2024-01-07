@@ -59,6 +59,7 @@ vector<int> CriptareAndValidare::menu()
     {
         throw e;
     }
+    return keys;
 }
 
 bool isPrime(int n)

@@ -3,13 +3,18 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "/usr/local/include/mongocxx/v_noabi",
+                "${workspaceFolder}/mongo-cxx-driver-r3.9.0/src/mongocxx/include/mongocxx/v_noabi",
+                "${workspaceFolder}/mongo-cxx-driver-r3.9.0/src/mongocxx/include/mongocxx/v_noabi",
+                "/usr/local/include/mongocxx/v_noabi"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc",
             "cStandard": "c17",
             "cppStandard": "gnu++17",
-            "intelliSenseMode": "linux-gcc-x64"
+            "intelliSenseMode": "linux-gcc-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

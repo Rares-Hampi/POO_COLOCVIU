@@ -350,7 +350,8 @@ public:
                             string name;
                             cout << "Ce flow doriti sa rulati?" << endl;
                             cin >> name;
-                            flow.runFlow(name);
+                            // flow.setName(name);
+                            step.runSteps(name);
                         }
                         catch (const std::exception &e)
                         {
@@ -370,7 +371,6 @@ public:
             // create workflow
             else if (option == "4")
             {
-
                 string option2;
                 do
                 {
@@ -501,7 +501,7 @@ public:
 
                                     } while (err == 1);
 
-                                    step.writeToFile(flow.getName() + ".csv");
+                                    step.writeToFile(i + 1);
                                 }
                             }
                         }
@@ -577,7 +577,7 @@ public:
 
                         } while (err == 1);
 
-                        step.writeToFile(flow.getName() + ".csv");
+                        step.writeToFile(index);
                     }
 
                     // ! delete a step
@@ -588,7 +588,7 @@ public:
                             string step_name;
                             cout << "Ce task doriti sa stergeti?" << endl;
                             cin >> step_name;
-                            step.deleteStep(step_name, flow.getName());
+                            step.deleteStep(step_name);
                         }
                         catch (const std::exception &e)
                         {
@@ -601,7 +601,7 @@ public:
                     {
                         try
                         {
-                            step.showAllSteps(flow.getName());
+                            step.showAllSteps();
                         }
                         catch (const std::exception &e)
                         {

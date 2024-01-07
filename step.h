@@ -7,7 +7,9 @@
 #include <sstream>
 #include <regex>
 #include <vector>
+
 #include "flow.h"
+
 using namespace std;
 
 class Step
@@ -27,11 +29,17 @@ public:
 
     void setType(string type);
 
-    void writeToFile(string file_name);
+    void writeToFile(int index);
 
-    void deleteStep(string step_name, string file_name);
+    void deleteStep(string step_name);
 
-    void showAllSteps(string file_name);
+    void showAllSteps();
+
+    void runSteps(string file);
+
+    void update(string file_name, string step_name, string value);
+
+    string getValue(string file_name, string step_name, string type);
 
     string nume;
     string description;
@@ -43,9 +51,12 @@ class CalculusStep : public Step
 {
 public:
     string operation;
-    int result;
+    vector<float> numbers;
+    float result;
 
     void setOperation(string operation);
+
+    void setNumbers(float number);
 
     bool decideOperation(string operation);
 
@@ -53,9 +64,9 @@ public:
 
     string getOperation(string operation);
 
-    vector<float> getNumberFromStep();
+    string getOperationType(string operation);
 
-    void executeOperation(string operation);
+    void executeOperation(string operation, string file_name);
 
     void setResult(float result);
 };
@@ -119,6 +130,7 @@ public:
 
 class EndStep : public Step
 {
+public:
     void endProgram();
 };
 
