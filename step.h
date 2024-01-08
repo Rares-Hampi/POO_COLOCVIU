@@ -51,12 +51,9 @@ class CalculusStep : public Step
 {
 public:
     string operation;
-    vector<float> numbers;
     float result;
 
     void setOperation(string operation);
-
-    void setNumbers(float number);
 
     bool decideOperation(string operation);
 
@@ -81,31 +78,35 @@ public:
     void setInput(T input);
 
     T getInput();
-    T setValue(T value);
 };
 
 class OutputStep : public Step
 {
 public:
-    string step_title;
+    string title;
     string file;
-    string file_description;
+    string description;
+    int number_step;
 
     void setFile(string file);
 
     string getFile();
 
-    void setStepTitle(string step_title);
+    void setStepTitle(string title);
 
     string getStepTitle();
 
-    void setFileDescription(string file_description);
+    void setNumber(int number_step);
+
+    int getNumber();
+
+    void setFileDescription(string description);
 
     string getFileDescription();
 
-    string getInfoAboutStep(string step_title);
+    string getInfoAboutStep(string title);
 
-    void writeToFile();
+    void writeToFile(string file, string description, string title, string number_step);
 };
 
 class FileStep : public Step

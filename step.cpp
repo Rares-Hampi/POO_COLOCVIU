@@ -138,13 +138,10 @@ void Step::update(string file_name, string step_name, string new_value)
 
                 if (step != step_name)
                 {
-                    cout << "plm"
-                         << "step" << step << endl;
                     temp << line << endl;
                 }
                 else
                 {
-                    cout << "step" << step << endl;
                     temp << step << "," << name << "," << description << "," << type << "," << new_value << endl;
                 }
             }
@@ -399,10 +396,10 @@ float InputStep<float>::getInput()
 }
 
 template <>
-void InputStep<string>::setInput(string input)
+void InputStep<string>::setInput(string input_given)
 {
 
-    input = input;
+    input = input_given;
 }
 
 template <>
@@ -422,24 +419,34 @@ string OutputStep::getFile()
     return file;
 }
 
-void OutputStep::setStepTitle(string step_title)
+void OutputStep::setStepTitle(string step)
 {
-    step_title = step_title;
+    title = step;
 }
 
 string OutputStep::getStepTitle()
 {
-    return step_title;
+    return this->title;
 }
 
 void OutputStep::setFileDescription(string file_description)
 {
-    file_description = file_description;
+    this->description = file_description;
 }
 
 string OutputStep::getFileDescription()
 {
-    return file_description;
+    return description;
+}
+
+void OutputStep::setNumber(int number)
+{
+    this->number_step = number;
+}
+
+int OutputStep::getNumber()
+{
+    return number_step;
 }
 
 string OutputStep::getInfoAboutStep(string step_title)
@@ -477,16 +484,23 @@ string OutputStep::getInfoAboutStep(string step_title)
     return info;
 }
 
-void OutputStep::writeToFile()
+void OutputStep::writeToFile(string file_name, string description, string step, string number_step)
 {
-    string step_info = getInfoAboutStep(step_title);
-    fstream file;
-    file.open("flows.txt", ios::app);
-    if (file.is_open())
+    try
     {
-        file << file_description << endl
-             << endl;
-        file << step_info << endl;
+        string value = getValue(file_name, number_step, "float");
+        ofstream file(file_name);
+        if (file.is_open())
+        {
+
+            file << step << endl;
+            file << description << endl;
+            file << value << endl;
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
@@ -740,6 +754,7 @@ void Step::runSteps(string file_name)
                             {
                                 OutputStep outputStep;
                                 outputStep.setStepTitle(step_title);
+                                outputStep.writeToFile(file_name, step_description, step_title, step_number);
                                 err = 0;
                             }
                         } while (err == 1);
