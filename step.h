@@ -29,7 +29,7 @@ public:
 
     void setType(string type);
 
-    void writeToFile(int index);
+    void writeToFile(int index, string file_name);
 
     void deleteStep(string step_name);
 

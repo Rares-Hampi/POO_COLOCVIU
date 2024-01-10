@@ -388,6 +388,7 @@ public:
                             {
                                 cout << "Ce nume doriti sa aiba workflowul?" << endl;
                                 cin >> name;
+                                cout << name;
                                 flow.setName(name);
                                 flow.createFile(name);
                                 err = 0;
@@ -510,7 +511,7 @@ public:
 
                                     } while (err == 1);
 
-                                    step.writeToFile(i + 1);
+                                    step.writeToFile(i + 1, flow.getName());
                                 }
                             }
                         }
@@ -524,6 +525,7 @@ public:
                     else if (option2 == "3")
                     {
 
+                        cout << flow.getName() << endl;
                         int err = 0;
                         int index = flow.getStepNumber() + 1;
                         cout << "Taskul " << index << endl;
@@ -596,7 +598,7 @@ public:
 
                         } while (err == 1);
 
-                        step.writeToFile(index);
+                        step.writeToFile(index, flow.getName());
                     }
 
                     // ! delete a step

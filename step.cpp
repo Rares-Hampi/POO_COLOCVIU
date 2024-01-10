@@ -81,14 +81,15 @@ string Step::getType()
     return this->type;
 }
 
-void Step::writeToFile(int index)
+void Step::writeToFile(int index, string file_name)
 {
     string directory = "./workflows/";
     try
     {
 
         ofstream file;
-        file.open(directory + flow.getName() + ".csv");
+        file.open(directory + file_name + ".csv", ios::app);
+
         if (!file.good())
         {
             throw runtime_error("Fisierul nu exista");
@@ -96,7 +97,8 @@ void Step::writeToFile(int index)
 
         if (file.is_open())
         {
-            file << "step" + to_string(index) << "," << nume << "," << description << "," << type << endl;
+            file << "step" + to_string(index) << "," << getNume() << "," << getDescription() << "," << getType() << endl;
+            file.close();
         }
         else
         {

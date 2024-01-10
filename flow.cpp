@@ -62,10 +62,13 @@ void Flow::createFile(string name)
 {
     try
     {
-        if (name == "")
+        if (name.empty())
         {
             throw runtime_error("Numele nu poate fi gol!");
         }
+
+        cout << "Numele flow-ului este: "
+             << "[" << name << "]" << endl;
 
         string directory = "./workflows/";
         ofstream file;
@@ -76,7 +79,8 @@ void Flow::createFile(string name)
              << ","
              << "descriprion"
              << ","
-             << "type" << endl;
+             << "type"
+             << "\n";
         file.close();
     }
     catch (const std::exception &e)
