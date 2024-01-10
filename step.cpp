@@ -10,42 +10,100 @@ Step::Step()
 
 void Step::setNume(string name)
 {
-    nume = name;
+    try
+    {
+        if (name.empty())
+        {
+            throw runtime_error("Nu s-a putut seta numele. Numele nu poate fi gol.");
+        }
+
+        this->nume = name;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void Step::setDescription(string description)
 {
-    description = description;
+    try
+    {
+
+        if (description.empty())
+        {
+            throw runtime_error("Nu s-a putut seta descrierea. Descrierea nu poate fi goala.");
+        }
+
+        this->description = description;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void Step::setType(string type)
 {
-    type = type;
+    try
+    {
+        if (type.empty())
+        {
+            throw runtime_error("Nu s-a putut seta tipul. Tipul nu poate fi gol.");
+        }
+        if (type != "simple" || type != "input" || type != "calcul" || type != "display" || type != "file" || type != "output" || type != "end")
+        {
+            throw runtime_error("Nu s-a putut seta tipul. Tipul trebuie sa fie de forma: simple, input, calcul, display, file, output sau end.");
+        }
+
+        this->type = type;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 string Step::getNume()
 {
-    return nume;
+    return this->nume;
 }
 
 string Step::getDescription()
 {
-    return description;
+    return this->description;
 }
 
 string Step::getType()
 {
-    return type;
+    return this->type;
 }
 
 void Step::writeToFile(int index)
 {
     string directory = "./workflows/";
-    ofstream file;
-    file.open(directory + flow.getName(), ios::app);
-    if (file.is_open())
+    try
     {
-        file << "step" + to_string(index) << "," << nume << "," << description << "," << type << endl;
+
+        ofstream file;
+        file.open(directory + flow.getName(), ios::app);
+        if (!file.good())
+        {
+            throw runtime_error("Fisierul nu exista");
+        }
+
+        if (file.is_open())
+        {
+            file << "step" + to_string(index) << "," << nume << "," << description << "," << type << endl;
+        }
+        else
+        {
+            throw runtime_error("Nu s-a putut deschide fisierul");
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
@@ -59,7 +117,7 @@ void Step::deleteStep(string step_name)
 
         if (!file.good())
         {
-            throw runtime_error("Nu s-a putut deschide fisierul");
+            throw runtime_error("Fisierul nu exista");
         }
         if (file.is_open() && temp.is_open())
         {
@@ -76,6 +134,10 @@ void Step::deleteStep(string step_name)
                 }
             }
         }
+        else
+        {
+            throw runtime_error("Nu s-a putut deschide fisierul");
+        }
 
         file.close();
         temp.close();
@@ -91,15 +153,32 @@ void Step::deleteStep(string step_name)
 void Step::showAllSteps()
 {
     string directory = "./workflows/";
-    fstream file;
-    file.open(directory + flow.getName() + ".csv", ios::in);
-    if (file.is_open())
+    try
     {
-        string line;
-        while (getline(file, line))
+
+        ifstream file(directory + flow.getName() + ".csv");
+
+        if (file.good())
         {
-            cout << line << endl;
+            throw runtime_error("Fisierul nu exista");
         }
+
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                cout << line << endl;
+            }
+        }
+        else
+        {
+            throw runtime_error("Nu s-a putut deschide fisierul");
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
     }
 }
 
@@ -221,7 +300,19 @@ string Step::getValue(string file_name, string step_name, string type)
 
 void CalculusStep::setOperation(string operation)
 {
-    operation = operation;
+    try
+    {
+        if (operation.empty())
+        {
+            throw runtime_error("Nu s-a putut seta operatia. Operatia nu poate fi goala.");
+        }
+
+        this->operation = operation;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 string CalculusStep::getOperation(string operation)
@@ -374,13 +465,27 @@ void CalculusStep::executeOperation(string operation, string file_name)
 
 void CalculusStep::setResult(float number)
 {
-    result = number;
+    try
+    {
+        this->result = number;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 template <>
 void InputStep<float>::setInput(float number)
 {
-    input = number;
+    try
+    {
+        this->input = number;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 template <>
@@ -394,7 +499,19 @@ template <>
 void InputStep<string>::setInput(string input_given)
 {
 
-    input = input_given;
+    try
+    {
+        if (input_given.empty())
+        {
+            throw runtime_error("Nu s-a putut seta inputul. Inputul nu poate fi gol.");
+        }
+
+        this->input = input_given;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 template <>
@@ -406,7 +523,19 @@ string InputStep<string>::getInput()
 
 void OutputStep::setFile(string file_name)
 {
-    file = file_name;
+    try
+    {
+        if (file_name.empty())
+        {
+            throw runtime_error("Nu s-a putut seta numele fisierului. Numele fisierului nu poate fi gol.");
+        }
+
+        this->file = file_name;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 string OutputStep::getFile()
@@ -416,7 +545,19 @@ string OutputStep::getFile()
 
 void OutputStep::setStepTitle(string step)
 {
-    title = step;
+    try
+    {
+        if (step.empty())
+        {
+            throw runtime_error("Nu s-a putut seta titlul. Titlul nu poate fi gol.");
+        }
+
+        this->title = step;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 string OutputStep::getStepTitle()
@@ -426,7 +567,19 @@ string OutputStep::getStepTitle()
 
 void OutputStep::setFileDescription(string file_description)
 {
-    description = file_description;
+    try
+    {
+        if (file_description.empty())
+        {
+            throw runtime_error("Nu s-a putut seta descrierea. Descrierea nu poate fi goala.");
+        }
+
+        this->description = file_description;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 string OutputStep::getFileDescription()
@@ -436,7 +589,14 @@ string OutputStep::getFileDescription()
 
 void OutputStep::setNumber(int number)
 {
-    this->number_step = number;
+    try
+    {
+        this->number_step = number;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 int OutputStep::getNumber()
@@ -507,9 +667,21 @@ void OutputStep::writeToFile(string file_to_open, string file_to_get_form, strin
     }
 }
 
-void FileStep::setFile(string file)
+void FileStep::setFile(string file_name)
 {
-    file = file;
+    try
+    {
+        if (file_name.empty())
+        {
+            throw runtime_error("Nu s-a putut seta numele fisierului. Numele fisierului nu poate fi gol.");
+        }
+
+        this->file = file_name;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 string FileStep::getFile()
@@ -546,9 +718,21 @@ void FileStep::getFromFile(string file)
     }
 }
 
-void DisplayStep::setStepTitle(string step_title)
+void DisplayStep::setStepTitle(string title)
 {
-    step_title = step_title;
+    try
+    {
+        if (title.empty())
+        {
+            throw runtime_error("Nu s-a putut seta titlul. Titlul nu poate fi gol.");
+        }
+
+        this->step_title = title;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 }
 
 void DisplayStep::displayFile(string file_name)
@@ -556,6 +740,10 @@ void DisplayStep::displayFile(string file_name)
 
     try
     {
+        if (file_name.empty())
+        {
+            throw runtime_error("Nu s-a putut gasi fisierul. Fisierul trebuie sa fie de forma: fisier.txt sau fisier.csv.");
+        }
 
         ifstream file(file_name);
         if (file.is_open())
