@@ -68,6 +68,7 @@ public:
     void setResult(float result);
 };
 
+
 template <typename T>
 class InputStep : public Step
 {
@@ -106,7 +107,7 @@ public:
 
     string getInfoAboutStep(string title);
 
-    void writeToFile(string file, string description, string title, string number_step);
+    void writeToFile(string file_to_open, string file_to_get_from, string description, string title, string number_step);
 };
 
 class FileStep : public Step

@@ -105,7 +105,6 @@ void Step::showAllSteps()
 
 void Step::update(string file_name, string step_name, string new_value)
 {
-    cout << "step_name" << step_name << "gigel" << endl;
 
     string directory = "./workflows/";
     try
@@ -209,7 +208,6 @@ string Step::getValue(string file_name, string step_name, string type)
         }
         else
         {
-            return "";
             throw runtime_error("Nu s-a putut deschide fisierul");
         }
 
@@ -240,14 +238,13 @@ bool CalculusStep::decideOperation(string operation)
 
         if (regex_match(operation, operation_regex))
         {
-            cout << "Operatia este valida" << endl;
             setOperation(operation);
             return true;
         }
         else
         {
 
-            throw runtime_error("Nu s-a putut executa operatia");
+            throw runtime_error("Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.");
             return false;
         }
     }
@@ -324,8 +321,6 @@ void CalculusStep::executeOperation(string operation, string file_name)
     {
 
         string operation_type = getOperationType(operation);
-
-        cout << "operation_type" << operation_type << endl;
 
         numbers.push_back(stof(getValue(file_name, steps[0], "float")));
         numbers.push_back(stof(getValue(file_name, steps[1], "float")));
@@ -409,9 +404,9 @@ string InputStep<string>::getInput()
     return input;
 }
 
-void OutputStep::setFile(string file)
+void OutputStep::setFile(string file_name)
 {
-    file = file;
+    file = file_name;
 }
 
 string OutputStep::getFile()
@@ -426,12 +421,12 @@ void OutputStep::setStepTitle(string step)
 
 string OutputStep::getStepTitle()
 {
-    return this->title;
+    return title;
 }
 
 void OutputStep::setFileDescription(string file_description)
 {
-    this->description = file_description;
+    description = file_description;
 }
 
 string OutputStep::getFileDescription()
@@ -484,12 +479,20 @@ string OutputStep::getInfoAboutStep(string step_title)
     return info;
 }
 
-void OutputStep::writeToFile(string file_name, string description, string step, string number_step)
+void OutputStep::writeToFile(string file_to_open, string file_to_get_form, string description, string step, string number_step)
 {
     try
     {
-        string value = getValue(file_name, number_step, "float");
-        ofstream file(file_name);
+        cout << "step" << number_step << endl;
+        string value = getValue(file_to_get_form, number_step, "float");
+        if (value.empty())
+        {
+            throw runtime_error("Nu s-a putut gasi step-ul. Step-ul trebuie sa fie de forma: step1.");
+        }
+
+        cout << file_to_open << endl;
+        ofstream file(file_to_open + ".txt");
+
         if (file.is_open())
         {
 
@@ -550,12 +553,11 @@ void DisplayStep::setStepTitle(string step_title)
 
 void DisplayStep::displayFile(string file_name)
 {
-    string directory = "./workflows/";
+
     try
     {
 
-        fstream file;
-        file.open(directory + file_name + ".csv", ios::in);
+        ifstream file(file_name);
         if (file.is_open())
         {
             string line;
@@ -566,7 +568,7 @@ void DisplayStep::displayFile(string file_name)
         }
         else
         {
-            throw "Nu s-a putut deschide fisierul";
+            throw runtime_error("Nu s-a putut deschide fisierul");
         }
     }
     catch (const std::exception &e)
@@ -623,6 +625,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "calculus")
                 {
+                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
 
@@ -633,14 +636,12 @@ void Step::runSteps(string file_name)
 
                         do
                         {
-                            fflush(stdin);
-                            fflush(stdin);
                             do
                             {
                                 cout << "Introduceti operatia dorita: ";
 
                                 getline(cin, op);
-                                cout << op << endl;
+
                                 if (op.empty())
                                 {
                                     cout << "Nu ati introdus nicio operatie!" << endl;
@@ -649,13 +650,13 @@ void Step::runSteps(string file_name)
                                 else
                                 {
                                     err = 0;
-                                    cout << op << endl;
                                 }
                             } while (err == 1);
 
                             CalculusStep calculusStep;
                             calculusStep.decideOperation(op);
                             calculusStep.executeOperation(op, file_name);
+                            step.update(file_name, step_number, to_string(calculusStep.result));
 
                         } while (err == 1);
                     }
@@ -666,6 +667,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "input")
                 {
+                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
                     try
@@ -717,19 +719,22 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "output")
                 {
+                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
                     try
                     {
                         int err = 0;
-                        string file_name;
+                        string file;
                         string step_title;
+                        string step_description;
+                        string step;
 
                         do
                         {
                             cout << "Introduceti numele fisierului: ";
-                            cin >> file_name;
-                            if (file_name.empty())
+                            cin >> file;
+                            if (file.empty())
                             {
                                 throw runtime_error("Nu ati introdus niciun nume!");
                                 err = 1;
@@ -737,7 +742,7 @@ void Step::runSteps(string file_name)
                             else
                             {
                                 OutputStep outputStep;
-                                outputStep.setFile(file_name);
+                                outputStep.setFile(file);
                                 err = 0;
                             }
                         } while (err == 1);
@@ -746,15 +751,23 @@ void Step::runSteps(string file_name)
                         {
                             cout << "Introduceti titlul: ";
                             cin >> step_title;
-                            if (step_title.empty())
+
+                            cout << "Introduceti o descriere pentru fisier: ";
+                            cin >> step_description;
+
+                            cout << "Introduceti pasul de la care doriti sa luati outputul. Pasul trebuie sa fie de forma: step[nr] ";
+                            cin >> step;
+
+                            if (step_title.empty() && step_description.empty() && step.empty())
                             {
                                 throw runtime_error("Nu ati introdus niciun titlu!");
                             }
+
                             else
                             {
                                 OutputStep outputStep;
                                 outputStep.setStepTitle(step_title);
-                                outputStep.writeToFile(file_name, step_description, step_title, step_number);
+                                outputStep.writeToFile(file, file_name, step_description, step_title, step);
                                 err = 0;
                             }
                         } while (err == 1);
@@ -766,6 +779,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "file")
                 {
+                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
 
@@ -798,6 +812,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "display")
                 {
+                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
                     try
@@ -829,29 +844,14 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "end")
                 {
+
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
                     try
                     {
-                        int err = 0;
-                        string file_name;
 
-                        do
-                        {
-                            cout << "Introduceti numele fisierului (cu tot cu extensie): ";
-                            cin >> file_name;
-                            if (file_name.empty())
-                            {
-                                throw runtime_error("Nu ati introdus niciun nume!");
-                                err = 1;
-                            }
-                            else
-                            {
-                                EndStep endStep;
-                                endStep.endProgram();
-                                err = 0;
-                            }
-                        } while (err == 1);
+                        EndStep endStep;
+                        endStep.endProgram();
                     }
                     catch (const std::exception &e)
                     {
