@@ -281,7 +281,14 @@ string Step::getValue(string file_name, string step_name, string type)
 
                 if (step == step_name)
                 {
-                    return value;
+                    if (value.empty())
+                    {
+                        throw runtime_error("Nu aveti nicio valoare pentru acest pas!");
+                    }
+                    else
+                    {
+                        return value;
+                    }
                 }
             }
         }
@@ -412,6 +419,11 @@ void CalculusStep::executeOperation(string operation, string file_name)
     {
 
         string operation_type = getOperationType(operation);
+
+        if (operation_type.empty())
+        {
+            throw runtime_error("Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.");
+        }
 
         numbers.push_back(stof(getValue(file_name, steps[0], "float")));
         numbers.push_back(stof(getValue(file_name, steps[1], "float")));
@@ -647,7 +659,7 @@ void OutputStep::writeToFile(string file_to_open, string file_to_get_form, strin
         string value = getValue(file_to_get_form, number_step, "float");
         if (value.empty())
         {
-            throw runtime_error("Nu s-a putut gasi step-ul. Step-ul trebuie sa fie de forma: step1.");
+            throw runtime_error("Pentru pasul precizat nu exista nicio valoare.");
         }
 
         cout << file_to_open << endl;
@@ -792,6 +804,7 @@ void Step::runSteps(string file_name)
             string step_type;
             string step_number;
             string value;
+            string skip;
 
             while (getline(file, line))
             {
@@ -813,189 +826,245 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "calculus")
                 {
-                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
 
-                    try
-                    {
-                        string op;
-                        int err = 0;
+                    cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
+                    cin >> skip;
 
-                        do
+                    if (skip == "y")
+                    {
+                        system("clear");
+                        continue;
+                    }
+                    else if (skip == "n")
+                    {
+                        system("clear");
+                        cout << "Step name: " << step_name << endl;
+                        cout << "Step description: " << step_description << endl;
+                        try
                         {
+                            string op;
+                            int err = 0;
+
                             do
                             {
-                                cout << "Introduceti operatia dorita: ";
-
-                                getline(cin, op);
-
-                                if (op.empty())
+                                do
                                 {
-                                    cout << "Nu ati introdus nicio operatie!" << endl;
-                                    err = 1;
-                                }
-                                else
-                                {
-                                    err = 0;
-                                }
+                                    cout << "Introduceti operatia dorita: ";
+
+                                    getline(cin, op);
+
+                                    if (op.empty())
+                                    {
+                                        cout << "Nu ati introdus nicio operatie!" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        err = 0;
+                                    }
+                                } while (err == 1);
+
+                                CalculusStep calculusStep;
+                                calculusStep.decideOperation(op);
+                                calculusStep.executeOperation(op, file_name);
+                                step.update(file_name, step_number, to_string(calculusStep.result));
+
                             } while (err == 1);
-
-                            CalculusStep calculusStep;
-                            calculusStep.decideOperation(op);
-                            calculusStep.executeOperation(op, file_name);
-                            step.update(file_name, step_number, to_string(calculusStep.result));
-
-                        } while (err == 1);
-                    }
-                    catch (const std::exception &e)
-                    {
-                        std::cerr << e.what() << '\n';
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                 }
                 else if (step_type == "input")
                 {
-                    system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
-                    try
+
+                    cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
+                    cin >> skip;
+
+                    if (skip == "y")
                     {
-                        string value_type;
-                        int err = 0;
-
-                        do
-                        {
-                            cout << "Introduceti tipul valorii: ";
-                            cin >> value_type;
-                            if (value_type.empty())
-                            {
-                                throw runtime_error("Nu ati introdus niciun tip!");
-                            }
-                            else if (value_type == "float")
-                            {
-                                float value;
-                                cout << "Introduceti valoarea: ";
-                                cin >> value;
-                                InputStep<float> inputFloatStep;
-                                inputFloatStep.setInput(value);
-                                step.update(file_name, step_number, to_string(value));
-                                err = 0;
-                            }
-
-                            else if (value_type == "string")
-                            {
-                                string value;
-                                cout << "Introduceti valoarea: ";
-                                cin >> value;
-                                InputStep<string> inputStringStep;
-                                inputStringStep.setInput(value);
-                                step.update(file_name, step_name, inputStringStep.getInput());
-                                err = 0;
-                            }
-                            else
-                            {
-                                throw runtime_error("Nu ati introdus un tip valid!");
-                                err = 1;
-                            }
-
-                        } while (err == 1);
+                        system("clear");
+                        continue;
                     }
-                    catch (const std::exception &e)
+                    else if (skip == "n")
                     {
-                        std::cerr << e.what() << '\n';
+                        system("clear");
+                        cout << "Step name: " << step_name << endl;
+                        cout << "Step description: " << step_description << endl;
+                        try
+                        {
+                            string value_type;
+                            int err = 0;
+
+                            do
+                            {
+                                cout << "Introduceti tipul valorii: ";
+                                cin >> value_type;
+                                if (value_type.empty())
+                                {
+                                    throw runtime_error("Nu ati introdus niciun tip!");
+                                }
+                                else if (value_type == "float")
+                                {
+                                    float value;
+                                    cout << "Introduceti valoarea: ";
+                                    cin >> value;
+                                    InputStep<float> inputFloatStep;
+                                    inputFloatStep.setInput(value);
+                                    step.update(file_name, step_number, to_string(value));
+                                    err = 0;
+                                }
+
+                                else if (value_type == "string")
+                                {
+                                    string value;
+                                    cout << "Introduceti valoarea: ";
+                                    cin >> value;
+                                    InputStep<string> inputStringStep;
+                                    inputStringStep.setInput(value);
+                                    step.update(file_name, step_name, inputStringStep.getInput());
+                                    err = 0;
+                                }
+                                else
+                                {
+                                    throw runtime_error("Nu ati introdus un tip valid!");
+                                    err = 1;
+                                }
+
+                            } while (err == 1);
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                 }
                 else if (step_type == "output")
                 {
-                    system("clear");
+
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
-                    try
+
+                    cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
+                    cin >> skip;
+
+                    if (skip == "y")
                     {
-                        int err = 0;
-                        string file;
-                        string step_title;
-                        string step_description;
-                        string step;
-
-                        do
-                        {
-                            cout << "Introduceti numele fisierului: ";
-                            cin >> file;
-                            if (file.empty())
-                            {
-                                throw runtime_error("Nu ati introdus niciun nume!");
-                                err = 1;
-                            }
-                            else
-                            {
-                                OutputStep outputStep;
-                                outputStep.setFile(file);
-                                err = 0;
-                            }
-                        } while (err == 1);
-
-                        do
-                        {
-                            cout << "Introduceti titlul: ";
-                            cin >> step_title;
-
-                            cout << "Introduceti o descriere pentru fisier: ";
-                            cin >> step_description;
-
-                            cout << "Introduceti pasul de la care doriti sa luati outputul. Pasul trebuie sa fie de forma: step[nr] ";
-                            cin >> step;
-
-                            if (step_title.empty() && step_description.empty() && step.empty())
-                            {
-                                throw runtime_error("Nu ati introdus niciun titlu!");
-                            }
-
-                            else
-                            {
-                                OutputStep outputStep;
-                                outputStep.setStepTitle(step_title);
-                                outputStep.writeToFile(file, file_name, step_description, step_title, step);
-                                err = 0;
-                            }
-                        } while (err == 1);
+                        system("clear");
+                        continue;
                     }
-                    catch (const std::exception &e)
+                    else
                     {
-                        std::cerr << e.what() << '\n';
+                        system("clear");
+                        cout << "Step name: " << step_name << endl;
+                        cout << "Step description: " << step_description << endl;
+                        try
+                        {
+                            int err = 0;
+                            string file;
+                            string step_title;
+                            string step_description;
+                            string step;
+
+                            do
+                            {
+                                cout << "Introduceti numele fisierului: ";
+                                cin >> file;
+                                if (file.empty())
+                                {
+                                    throw runtime_error("Nu ati introdus niciun nume!");
+                                    err = 1;
+                                }
+                                else
+                                {
+                                    OutputStep outputStep;
+                                    outputStep.setFile(file);
+                                    err = 0;
+                                }
+                            } while (err == 1);
+
+                            do
+                            {
+                                cout << "Introduceti titlul: ";
+                                cin >> step_title;
+
+                                cout << "Introduceti o descriere pentru fisier: ";
+                                cin >> step_description;
+
+                                cout << "Introduceti pasul de la care doriti sa luati outputul. Pasul trebuie sa fie de forma: step[nr] ";
+                                cin >> step;
+
+                                if (step_title.empty() && step_description.empty() && step.empty())
+                                {
+                                    throw runtime_error("Nu ati introdus niciun titlu!");
+                                }
+
+                                else
+                                {
+                                    OutputStep outputStep;
+                                    outputStep.setStepTitle(step_title);
+                                    outputStep.writeToFile(file, file_name, step_description, step_title, step);
+                                    err = 0;
+                                }
+                            } while (err == 1);
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                 }
                 else if (step_type == "file")
                 {
-                    system("clear");
+
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
 
-                    try
-                    {
-                        int err = 0;
-                        string file_name;
+                    cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
+                    cin >> skip;
 
-                        do
-                        {
-                            cout << "Introduceti numele fisierului (cu tot cu extensie): ";
-                            cin >> file_name;
-                            if (file_name.empty())
-                            {
-                                throw runtime_error("Nu ati introdus niciun nume!");
-                                err = 1;
-                            }
-                            else
-                            {
-                                FileStep fileStep;
-                                fileStep.setFile(file_name);
-                                err = 0;
-                            }
-                        } while (err == 1);
-                    }
-                    catch (const std::exception &e)
+                    if (skip == "y")
                     {
-                        std::cerr << e.what() << '\n';
+                        system("clear");
+                        continue;
+                    }
+                    else if (skip == "n")
+                    {
+                        system("clear");
+                        cout << "Step name: " << step_name << endl;
+                        cout << "Step description: " << step_description << endl;
+                        try
+                        {
+                            int err = 0;
+                            string file_name;
+
+                            do
+                            {
+                                cout << "Introduceti numele fisierului (cu tot cu extensie): ";
+                                cin >> file_name;
+                                if (file_name.empty())
+                                {
+                                    throw runtime_error("Nu ati introdus niciun nume!");
+                                    err = 1;
+                                }
+                                else
+                                {
+                                    FileStep fileStep;
+                                    fileStep.setFile(file_name);
+                                    err = 0;
+                                }
+                            } while (err == 1);
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                 }
                 else if (step_type == "display")
@@ -1003,31 +1072,46 @@ void Step::runSteps(string file_name)
                     system("clear");
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
-                    try
-                    {
-                        int err = 0;
-                        string file_name;
 
-                        do
-                        {
-                            cout << "Introduceti numele fisierului (cu tot cu extensie): ";
-                            cin >> file_name;
-                            if (file_name.empty())
-                            {
-                                throw runtime_error("Nu ati introdus niciun nume!");
-                                err = 1;
-                            }
-                            else
-                            {
-                                DisplayStep displayStep;
-                                displayStep.displayFile(file_name);
-                                err = 0;
-                            }
-                        } while (err == 1);
-                    }
-                    catch (const std::exception &e)
+                    cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
+                    cin >> skip;
+
+                    if (skip == "y")
                     {
-                        std::cerr << e.what() << '\n';
+                        system("clear");
+                        continue;
+                    }
+                    else if (skip == "n")
+                    {
+                        system("clear");
+                        cout << "Step name: " << step_name << endl;
+                        cout << "Step description: " << step_description << endl;
+                        try
+                        {
+                            int err = 0;
+                            string file_name;
+
+                            do
+                            {
+                                cout << "Introduceti numele fisierului (cu tot cu extensie): ";
+                                cin >> file_name;
+                                if (file_name.empty())
+                                {
+                                    throw runtime_error("Nu ati introdus niciun nume!");
+                                    err = 1;
+                                }
+                                else
+                                {
+                                    DisplayStep displayStep;
+                                    displayStep.displayFile(file_name);
+                                    err = 0;
+                                }
+                            } while (err == 1);
+                        }
+                        catch (const std::exception &e)
+                        {
+                            std::cerr << e.what() << '\n';
+                        }
                     }
                 }
                 else if (step_type == "end")
