@@ -485,9 +485,18 @@ public:
                                     // set the type of the task
                                     do
                                     {
-                                        cout << "Ce tip de task doresti sa fie? (title/text/calculus/input/file/output/display/end): ";
+                                        system("clear");
+                                        cout << "Simple: afiseaza doar numele si descrierea pasului\n";
+                                        cout << "Calculus: calculeaza o operatie intre 2 pasi oferiti ca input\n";
+                                        cout << "Input: citeste un string sau un numar de la tastatura si il salveaza intr-un fisier\n";
+                                        cout << "File: prin intermediul acestui pas adugi un fisier\n";
+                                        cout << "Output:prin intermediul acestui pas creezi un fisier, ii adaugi un titlu, o descrire si o valoare de la un pas anterior \n";
+                                        cout << "Display: afiseaza o valoare de la un pas anterior\n";
+                                        cout << "End: inchide workflowul\n";
 
+                                        cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file/output/display/end): ";
                                         cin >> type;
+
                                         if (type.empty())
                                         {
                                             cout << "Tipul nu poate fi gol" << endl;
@@ -535,6 +544,7 @@ public:
                             else
                             {
                                 step.setNume(name);
+
                                 err = 0;
                             }
                         } while (err == 1);
@@ -561,7 +571,16 @@ public:
                         // set the type of the task
                         do
                         {
+                            system("clear");
+                            cout << "Simple: afiseaza doar numele si descrierea pasului\n";
+                            cout << "Calculus: calculeaza o operatie intre 2 pasi oferiti ca input\n";
+                            cout << "Input: citeste un string sau un numar de la tastatura si il salveaza intr-un fisier\n";
+                            cout << "File: prin intermediul acestui pas adugi un fisier\n";
+                            cout << "Output:prin intermediul acestui pas creezi un fisier, ii adaugi un titlu, o descrire si o valoare de la un pas anterior \n";
+                            cout << "Display: afiseaza o valoare de la un pas anterior\n";
+                            cout << "End: inchide workflowul\n";
                             cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file/output/display/end): ";
+
                             cin >> type;
                             if (type.empty())
                             {

@@ -63,11 +63,10 @@ public:
 
     string getOperationType(string operation);
 
-    void executeOperation(string operation, string file_name);
+    void executeOperation(string operation, string file_name, string step);
 
     void setResult(float result);
 };
-
 
 template <typename T>
 class InputStep : public Step

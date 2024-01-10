@@ -51,9 +51,11 @@ void Step::setType(string type)
         {
             throw runtime_error("Nu s-a putut seta tipul. Tipul nu poate fi gol.");
         }
-        if (type != "simple" || type != "input" || type != "calcul" || type != "display" || type != "file" || type != "output" || type != "end")
+
+        if (!(type != "simple" || type != "calculus" || type != "input" || type != "file" || type != "output" || type != "display" || type != "end"))
         {
-            throw runtime_error("Nu s-a putut seta tipul. Tipul trebuie sa fie de forma: simple, input, calcul, display, file, output sau end.");
+
+            throw runtime_error("Nu s-a putut seta tipul. Tipul trebuie sa fie de forma: simple sau calculus sau input sau file sau output sau display sau end.");
         }
 
         this->type = type;
@@ -86,7 +88,7 @@ void Step::writeToFile(int index)
     {
 
         ofstream file;
-        file.open(directory + flow.getName(), ios::app);
+        file.open(directory + flow.getName() + ".csv");
         if (!file.good())
         {
             throw runtime_error("Fisierul nu exista");
@@ -410,7 +412,7 @@ string CalculusStep::getOperationType(string operation)
     return operation_type;
 }
 
-void CalculusStep::executeOperation(string operation, string file_name)
+void CalculusStep::executeOperation(string operation, string file_name, string step)
 {
     vector<float> numbers;
     vector<string> steps = getStepsFromOperation(operation);
@@ -423,6 +425,11 @@ void CalculusStep::executeOperation(string operation, string file_name)
         if (operation_type.empty())
         {
             throw runtime_error("Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.");
+        }
+
+        if (steps[0][4] > step[4] || steps[1][4] > step[4])
+        {
+            throw runtime_error("Nu s-a putut executa operatia. Nu poti efectua o operatie cu un pas la care nu ai ajuns inainte.");
         }
 
         numbers.push_back(stof(getValue(file_name, steps[0], "float")));
@@ -448,6 +455,11 @@ void CalculusStep::executeOperation(string operation, string file_name)
         }
         else if (operation_type == "/")
         {
+            if (numbers[1] == 0)
+            {
+                throw runtime_error("Nu s-a putut executa operatia. Nu poti imparti la 0.");
+            }
+
             cout << numbers[0] / numbers[1] << endl;
             result = numbers[0] / numbers[1];
             setResult(result);
@@ -851,8 +863,8 @@ void Step::runSteps(string file_name)
                             {
                                 do
                                 {
+                                    fflush(stdin);
                                     cout << "Introduceti operatia dorita: ";
-
                                     getline(cin, op);
 
                                     if (op.empty())
@@ -868,7 +880,7 @@ void Step::runSteps(string file_name)
 
                                 CalculusStep calculusStep;
                                 calculusStep.decideOperation(op);
-                                calculusStep.executeOperation(op, file_name);
+                                calculusStep.executeOperation(op, file_name, step_number);
                                 step.update(file_name, step_number, to_string(calculusStep.result));
 
                             } while (err == 1);
@@ -995,7 +1007,7 @@ void Step::runSteps(string file_name)
                                 cin >> step_title;
 
                                 cout << "Introduceti o descriere pentru fisier: ";
-                                cin >> step_description;
+                                getline(cin, step_description);
 
                                 cout << "Introduceti pasul de la care doriti sa luati outputul. Pasul trebuie sa fie de forma: step[nr] ";
                                 cin >> step;

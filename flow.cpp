@@ -54,7 +54,6 @@ void Flow::addFlow(string name, string user, int number)
     ofstream file;
     file.open("flows.csv", ios::app);
     file << name << "," << number << "," << user << "," << currentDateTime() << endl;
-    file << currentDateTime() << endl;
     file << endl;
     file.close();
 }
@@ -70,7 +69,7 @@ void Flow::createFile(string name)
 
         string directory = "./workflows/";
         ofstream file;
-        file.open(directory + name + ".csv", ios::app);
+        file.open(directory + name + ".csv");
         file << "step_name"
              << ","
              << "title"
