@@ -350,7 +350,7 @@ public:
                             string name;
                             cout << "Ce flow doriti sa rulati?" << endl;
                             cin >> name;
-                            // flow.setName(name);
+                            flow.setName(name);
                             step.runSteps(name);
                         }
                         catch (const std::exception &e)
@@ -694,11 +694,6 @@ private:
     Menu menu;
     User user;
     Flow flow;
-    CalculusStep calculusStep;
-    InputStep<string> inputStep;
-    InputStep<int> inputStepInt;
-    OutputStep outputStep;
-    FileStep fileStep;
     Step step;
 };
 

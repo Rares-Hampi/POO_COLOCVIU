@@ -9,6 +9,7 @@
 #include <vector>
 
 #include "flow.h"
+#include "observer.h"
 
 using namespace std;
 
@@ -45,6 +46,7 @@ public:
     string description;
     string type;
     Flow flow;
+    Analytics analytics;
 };
 
 class CalculusStep : public Step

@@ -231,7 +231,7 @@ void Step::update(string file_name, string step_name, string new_value)
         }
         else
         {
-            throw "Nu s-a putut deschide fisierul";
+            throw runtime_error("Nu s-a putut deschide fisierul");
         }
 
         file.close();
@@ -241,7 +241,7 @@ void Step::update(string file_name, string step_name, string new_value)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -352,7 +352,7 @@ bool CalculusStep::decideOperation(string operation)
     }
     catch (const exception &e)
     {
-        cerr << e.what() << endl;
+        throw e;
     }
 }
 
@@ -485,7 +485,7 @@ void CalculusStep::executeOperation(string operation, string file_name, string s
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -510,7 +510,7 @@ void InputStep<float>::setInput(float number)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -536,7 +536,7 @@ void InputStep<string>::setInput(string input_given)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -560,7 +560,7 @@ void OutputStep::setFile(string file_name)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -582,7 +582,7 @@ void OutputStep::setStepTitle(string step)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -689,7 +689,7 @@ void OutputStep::writeToFile(string file_to_open, string file_to_get_form, strin
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -706,7 +706,7 @@ void FileStep::setFile(string file_name)
     }
     catch (const std::exception &e)
     {
-        std::cerr << e.what() << '\n';
+        throw e;
     }
 }
 
@@ -799,10 +799,14 @@ void EndStep::endProgram()
 void Step::runSteps(string file_name)
 {
     Step step;
+    Analytics analytics;
     string directory = "./workflows/";
     try
     {
         ifstream file;
+
+        analytics.setName(file_name);
+        analytics.start();
 
         file.open(directory + file_name + ".csv", ios::in);
         if (!file.good())
@@ -849,6 +853,7 @@ void Step::runSteps(string file_name)
                     if (skip == "y")
                     {
                         system("clear");
+                        analytics.skip();
                         continue;
                     }
                     else if (skip == "n")
@@ -889,6 +894,7 @@ void Step::runSteps(string file_name)
                         }
                         catch (const std::exception &e)
                         {
+                            analytics.fail();
                             std::cerr << e.what() << '\n';
                         }
                     }
@@ -903,6 +909,7 @@ void Step::runSteps(string file_name)
 
                     if (skip == "y")
                     {
+                        analytics.skip();
                         system("clear");
                         continue;
                     }
@@ -955,6 +962,7 @@ void Step::runSteps(string file_name)
                         }
                         catch (const std::exception &e)
                         {
+                            analytics.fail();
                             std::cerr << e.what() << '\n';
                         }
                     }
@@ -970,6 +978,7 @@ void Step::runSteps(string file_name)
 
                     if (skip == "y")
                     {
+                        analytics.skip();
                         system("clear");
                         continue;
                     }
@@ -1030,6 +1039,7 @@ void Step::runSteps(string file_name)
                         }
                         catch (const std::exception &e)
                         {
+                            analytics.fail();
                             std::cerr << e.what() << '\n';
                         }
                     }
@@ -1045,6 +1055,7 @@ void Step::runSteps(string file_name)
 
                     if (skip == "y")
                     {
+                        analytics.skip();
                         system("clear");
                         continue;
                     }
@@ -1077,13 +1088,14 @@ void Step::runSteps(string file_name)
                         }
                         catch (const std::exception &e)
                         {
+                            analytics.fail();
                             std::cerr << e.what() << '\n';
                         }
                     }
                 }
                 else if (step_type == "display")
                 {
-                    system("clear");
+
                     cout << "Step name: " << step_name << endl;
                     cout << "Step description: " << step_description << endl;
 
@@ -1092,6 +1104,7 @@ void Step::runSteps(string file_name)
 
                     if (skip == "y")
                     {
+                        analytics.skip();
                         system("clear");
                         continue;
                     }
@@ -1124,6 +1137,7 @@ void Step::runSteps(string file_name)
                         }
                         catch (const std::exception &e)
                         {
+                            analytics.fail();
                             std::cerr << e.what() << '\n';
                         }
                     }
@@ -1151,6 +1165,17 @@ void Step::runSteps(string file_name)
                 }
             }
             file.close();
+        }
+
+        if (file.eof())
+        {
+            if (analytics.returnSkips() == 0)
+            {
+                analytics.complete();
+            }
+
+            analytics.averageFail();
+            analytics.print();
         }
     }
     catch (const exception &e)
