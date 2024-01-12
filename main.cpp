@@ -71,11 +71,11 @@ public:
     void showCreateWorkflow()
     {
         cout << "Incepem procesul de creare a unui flow" << endl;
-        cout << "1. Introduceti numele: " << endl;
-        cout << "2. Introduce numarul de taskuri :" << endl;
-        cout << "3. Adaugare task" << endl;
-        cout << "4. Sterege task" << endl;
-        cout << "5. Afisare taskuri" << endl;
+        cout << "1. Setare nume" << endl;
+        cout << "2. Setare numar pasi" << endl;
+        cout << "3. Adaugare pas" << endl;
+        cout << "4. Sterege pas" << endl;
+        cout << "5. Afisare pasi" << endl;
         cout << "6. Inapoi" << endl;
     }
 
@@ -388,7 +388,6 @@ public:
                             {
                                 cout << "Ce nume doriti sa aiba workflowul?" << endl;
                                 cin >> name;
-                                cout << name;
                                 flow.setName(name);
                                 flow.createFile(name);
                                 err = 0;
@@ -448,6 +447,7 @@ public:
                                     // set the name of the task
                                     do
                                     {
+                                        fflush(stdin);
                                         cout << "Numele taskului este: ";
                                         getline(cin, name);
                                         if (name.empty())

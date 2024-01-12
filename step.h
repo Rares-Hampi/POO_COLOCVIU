@@ -88,7 +88,6 @@ public:
     string title;
     string file;
     string description;
-    int number_step;
 
     void setFile(string file);
 
@@ -98,17 +97,13 @@ public:
 
     string getStepTitle();
 
-    void setNumber(int number_step);
-
-    int getNumber();
-
     void setFileDescription(string description);
 
     string getFileDescription();
 
     string getInfoAboutStep(string title);
 
-    void writeToFile(string file_to_open, string file_to_get_from, string description, string title, string number_step);
+    void writeToFile(string file_to_open, string file_to_get_from, string description, string title, vector<string> number_steps, int size);
 };
 
 class FileStep : public Step

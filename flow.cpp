@@ -67,9 +67,6 @@ void Flow::createFile(string name)
             throw runtime_error("Numele nu poate fi gol!");
         }
 
-        cout << "Numele flow-ului este: "
-             << "[" << name << "]" << endl;
-
         string directory = "./workflows/";
         ofstream file;
         file.open(directory + name + ".csv");

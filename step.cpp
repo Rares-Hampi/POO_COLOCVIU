@@ -613,23 +613,6 @@ string OutputStep::getFileDescription()
     return description;
 }
 
-void OutputStep::setNumber(int number)
-{
-    try
-    {
-        this->number_step = number;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-}
-
-int OutputStep::getNumber()
-{
-    return number_step;
-}
-
 string OutputStep::getInfoAboutStep(string step_title)
 {
     string info = "";
@@ -665,15 +648,20 @@ string OutputStep::getInfoAboutStep(string step_title)
     return info;
 }
 
-void OutputStep::writeToFile(string file_to_open, string file_to_get_form, string description, string step, string number_step)
+void OutputStep::writeToFile(string file_to_open, string file_to_get_form, string description, string step, vector<string> steps, int size)
 {
     try
     {
-        cout << "step" << number_step << endl;
-        string value = getValue(file_to_get_form, number_step, "float");
-        if (value.empty())
+        vector<string> values;
+
+        for (string i : steps)
         {
-            throw runtime_error("Pentru pasul precizat nu exista nicio valoare.");
+            values.push_back(getValue(file_to_get_form, i, "float"));
+        }
+
+        if (values.size() != size)
+        {
+            throw runtime_error("Pentru pasii precizati nu exista nicio valoare.");
         }
 
         cout << file_to_open << endl;
@@ -684,7 +672,10 @@ void OutputStep::writeToFile(string file_to_open, string file_to_get_form, strin
 
             file << step << endl;
             file << description << endl;
-            file << value << endl;
+            for (int i = 0; i < size; i++)
+            {
+                file << steps[i] << " : " << values[i] << endl;
+            }
         }
     }
     catch (const std::exception &e)
@@ -993,7 +984,8 @@ void Step::runSteps(string file_name)
                             string file;
                             string step_title;
                             string step_description;
-                            string step;
+                            vector<string> steps;
+                            int nr_steps;
 
                             do
                             {
@@ -1020,19 +1012,27 @@ void Step::runSteps(string file_name)
                                 cout << "Introduceti o descriere pentru fisier: ";
                                 getline(cin, step_description);
 
-                                cout << "Introduceti pasul de la care doriti sa luati outputul. Pasul trebuie sa fie de forma: step[nr] ";
-                                cin >> step;
+                                cout << "Introduceti numarul de pasi: ";
+                                cin >> nr_steps;
 
-                                if (step_title.empty() && step_description.empty() && step.empty())
+                                for (int i = 0; i < nr_steps; i++)
                                 {
-                                    throw runtime_error("Nu ati introdus niciun titlu!");
+                                    string step;
+                                    cout << "Introduceti pasul de la care doriti sa luati outputul. Pasul trebuie sa fie de forma: step[nr] ";
+                                    cin >> step;
+                                    steps.push_back(step);
+                                }
+
+                                if (step_title.empty() && step_description.empty() && nr_steps == 0)
+                                {
+                                    throw runtime_error("Nu ati introdus datele necesare pentru a putea crea un fisier!");
                                 }
 
                                 else
                                 {
                                     OutputStep outputStep;
                                     outputStep.setStepTitle(step_title);
-                                    outputStep.writeToFile(file, file_name, step_description, step_title, step);
+                                    outputStep.writeToFile(file, file_name, step_description, step_title, steps, nr_steps);
                                     err = 0;
                                 }
                             } while (err == 1);
