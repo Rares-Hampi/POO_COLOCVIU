@@ -32,9 +32,11 @@ public:
 
     void writeToFile(int index, string file_name);
 
-    void deleteStep(string step_name);
+    void deleteStep(string file_name, string step_name);
 
-    void showAllSteps();
+    void showAllSteps(string file_name);
+
+    void showPreviousSteps(string step_name, string file_name);
 
     void runSteps(string file);
 

@@ -389,6 +389,7 @@ public:
                                 cout << "Ce nume doriti sa aiba workflowul?" << endl;
                                 cin >> name;
                                 flow.setName(name);
+                                flow.addFlow(flow.getName(), "user", 0);
                                 flow.createFile(name);
                                 err = 0;
                             }
@@ -414,7 +415,6 @@ public:
                             {
                                 cout << "Nu este nicio problema, puteti aduga taskuri pe parcurs" << endl;
                                 flow.setStepNumber(0);
-                                flow.addFlow(flow.getName(), "user", 0);
                             }
 
                             //! set the step number if the user knows how many steps he wants and add the steps
@@ -536,6 +536,7 @@ public:
                         // set the name of the task
                         do
                         {
+                            fflush(stdin);
                             cout << "Numele taskului este: ";
                             getline(cin, name);
                             if (name.empty())
@@ -609,7 +610,7 @@ public:
                             string step_name;
                             cout << "Ce task doriti sa stergeti?" << endl;
                             cin >> step_name;
-                            step.deleteStep(step_name);
+                            step.deleteStep(flow.getName(), step_name);
                         }
                         catch (const std::exception &e)
                         {
@@ -620,9 +621,10 @@ public:
                     // ! show all steps
                     else if (option2 == "5")
                     {
+
                         try
                         {
-                            step.showAllSteps();
+                            step.showAllSteps(flow.getName());
                         }
                         catch (const std::exception &e)
                         {

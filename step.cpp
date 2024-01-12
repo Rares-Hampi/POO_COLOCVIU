@@ -111,12 +111,12 @@ void Step::writeToFile(int index, string file_name)
     }
 }
 
-void Step::deleteStep(string step_name)
+void Step::deleteStep(string file_name, string step_name)
 {
     string directory = "./workflows/";
     try
     {
-        ifstream file(directory + flow.getName() + ".csv");
+        ifstream file(directory + file_name + ".csv");
         ofstream temp("./workflows/temp.csv");
 
         if (!file.good())
@@ -154,7 +154,34 @@ void Step::deleteStep(string step_name)
     }
 }
 
-void Step::showAllSteps()
+void Step::showAllSteps(string file_name)
+{
+    string directory = "./workflows/";
+    try
+    {
+
+        ifstream file(directory + file_name + ".csv");
+
+        if (file.is_open())
+        {
+            string line;
+            while (getline(file, line))
+            {
+                cout << line << endl;
+            }
+        }
+        else
+        {
+            throw runtime_error("Nu s-a putut deschide fisierul");
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
+
+void Step::showPreviousSteps(string break_step, string flow_name)
 {
     string directory = "./workflows/";
     try
@@ -172,7 +199,26 @@ void Step::showAllSteps()
             string line;
             while (getline(file, line))
             {
-                cout << line << endl;
+                stringstream ss(line);
+                string step;
+                string name;
+                string description;
+                string type;
+                string value;
+
+                getline(ss, step, ',');
+                getline(ss, name, ',');
+                getline(ss, description, ',');
+                getline(ss, type, ',');
+                getline(ss, value, ',');
+                if (step == break_step)
+                {
+                    break;
+                }
+                else
+                {
+                    cout << name << " : " << value << endl;
+                }
             }
         }
         else
@@ -1011,6 +1057,14 @@ void Step::runSteps(string file_name)
 
                                 cout << "Introduceti o descriere pentru fisier: ";
                                 getline(cin, step_description);
+
+                                cout << "Doriti sa vedeti pasii anteriori? (y/n)" << endl;
+                                cin >> skip;
+
+                                if (skip == "y")
+                                {
+                                    step.showPreviousSteps(step_name, file_name);
+                                }
 
                                 cout << "Introduceti numarul de pasi: ";
                                 cin >> nr_steps;
