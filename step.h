@@ -67,7 +67,7 @@ public:
 
     string getOperationType(string operation);
 
-    void executeOperation(string operation, string file_name, string step);
+    float executeOperation(string operation, string file_name, string step);
 
     void setResult(float result);
 };

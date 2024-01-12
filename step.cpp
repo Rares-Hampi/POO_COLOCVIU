@@ -52,7 +52,7 @@ void Step::setType(string type)
             throw runtime_error("Nu s-a putut seta tipul. Tipul nu poate fi gol.");
         }
 
-        if (!(type != "simple" || type != "calculus" || type != "input" || type != "file" || type != "output" || type != "display" || type != "end"))
+        if (!(type != "text" || type != "title" || type != "calculus" || type != "input_string" || type != "input_number" || type != "file" || type != "output" || type != "display" || type != "end"))
         {
 
             throw runtime_error("Nu s-a putut seta tipul. Tipul trebuie sa fie de forma: simple sau calculus sau input sau file sau output sau display sau end.");
@@ -97,7 +97,7 @@ void Step::writeToFile(int index, string file_name)
 
         if (file.is_open())
         {
-            file << "step" + to_string(index) << "," << getNume() << "," << getDescription() << "," << getType() << endl;
+            file << "step" + to_string(index) << "," << getNume() << "," << getDescription() << "," << getType() << "," << endl;
             file.close();
         }
         else
@@ -186,13 +186,9 @@ void Step::showPreviousSteps(string break_step, string flow_name)
     string directory = "./workflows/";
     try
     {
+        cout << "Flow name: " << flow_name << endl;
 
         ifstream file(directory + flow.getName() + ".csv");
-
-        if (file.good())
-        {
-            throw runtime_error("Fisierul nu exista");
-        }
 
         if (file.is_open())
         {
@@ -225,6 +221,7 @@ void Step::showPreviousSteps(string break_step, string flow_name)
         {
             throw runtime_error("Nu s-a putut deschide fisierul");
         }
+        file.close();
     }
     catch (const std::exception &e)
     {
@@ -264,7 +261,7 @@ void Step::update(string file_name, string step_name, string new_value)
                 getline(ss, type, ',');
                 getline(ss, value, ',');
 
-                if (step != step_name)
+                if (name != step_name)
                 {
                     temp << line << endl;
                 }
@@ -287,6 +284,7 @@ void Step::update(string file_name, string step_name, string new_value)
     }
     catch (const std::exception &e)
     {
+        cout << e.what() << '\n';
         throw e;
     }
 }
@@ -460,7 +458,7 @@ string CalculusStep::getOperationType(string operation)
     return operation_type;
 }
 
-void CalculusStep::executeOperation(string operation, string file_name, string step)
+float CalculusStep::executeOperation(string operation, string file_name, string step)
 {
     vector<float> numbers;
     vector<string> steps = getStepsFromOperation(operation);
@@ -500,6 +498,8 @@ void CalculusStep::executeOperation(string operation, string file_name, string s
         else if (operation_type == "*")
         {
             cout << numbers[0] * numbers[1] << endl;
+            result = numbers[0] + numbers[1];
+            setResult(result);
         }
         else if (operation_type == "/")
         {
@@ -705,13 +705,8 @@ void OutputStep::writeToFile(string file_to_open, string file_to_get_form, strin
             values.push_back(getValue(file_to_get_form, i, "float"));
         }
 
-        if (values.size() != size)
-        {
-            throw runtime_error("Pentru pasii precizati nu exista nicio valoare.");
-        }
-
         cout << file_to_open << endl;
-        ofstream file(file_to_open + ".txt");
+        ofstream file(file_to_open + ".txt", ios::app);
 
         if (file.is_open())
         {
@@ -881,8 +876,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "calculus")
                 {
-                    cout << "Step name: " << step_name << endl;
-                    cout << "Step description: " << step_description << endl;
+                    cout << "Step number: " << step_number << endl;
 
                     cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
                     cin >> skip;
@@ -905,8 +899,10 @@ void Step::runSteps(string file_name)
 
                             do
                             {
+
                                 do
                                 {
+
                                     fflush(stdin);
                                     cout << "Introduceti operatia dorita: ";
                                     getline(cin, op);
@@ -925,7 +921,7 @@ void Step::runSteps(string file_name)
                                 CalculusStep calculusStep;
                                 calculusStep.decideOperation(op);
                                 calculusStep.executeOperation(op, file_name, step_number);
-                                step.update(file_name, step_number, to_string(calculusStep.result));
+                                step.update(file_name, step_name, to_string(calculusStep.result));
 
                             } while (err == 1);
                         }
@@ -936,10 +932,9 @@ void Step::runSteps(string file_name)
                         }
                     }
                 }
-                else if (step_type == "input")
+                else if (step_type == "input_string")
                 {
-                    cout << "Step name: " << step_name << endl;
-                    cout << "Step description: " << step_description << endl;
+                    cout << "Step number: " << step_number << endl;
 
                     cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
                     cin >> skip;
@@ -957,45 +952,48 @@ void Step::runSteps(string file_name)
                         cout << "Step description: " << step_description << endl;
                         try
                         {
-                            string value_type;
-                            int err = 0;
 
-                            do
-                            {
-                                cout << "Introduceti tipul valorii: ";
-                                cin >> value_type;
-                                if (value_type.empty())
-                                {
-                                    throw runtime_error("Nu ati introdus niciun tip!");
-                                }
-                                else if (value_type == "float")
-                                {
-                                    float value;
-                                    cout << "Introduceti valoarea: ";
-                                    cin >> value;
-                                    InputStep<float> inputFloatStep;
-                                    inputFloatStep.setInput(value);
-                                    step.update(file_name, step_number, to_string(value));
-                                    err = 0;
-                                }
+                            string value;
+                            cout << "Introduceti valoarea: ";
+                            cin >> value;
+                            InputStep<string> inputStringStep;
+                            inputStringStep.setInput(value);
+                            step.update(file_name, step_name, inputStringStep.getInput());
+                        }
+                        catch (const std::exception &e)
+                        {
+                            analytics.fail();
+                            std::cerr << e.what() << '\n';
+                        }
+                    }
+                }
+                else if (step_type == "input_number")
+                {
+                    cout << "Step number: " << step_number << endl;
 
-                                else if (value_type == "string")
-                                {
-                                    string value;
-                                    cout << "Introduceti valoarea: ";
-                                    cin >> value;
-                                    InputStep<string> inputStringStep;
-                                    inputStringStep.setInput(value);
-                                    step.update(file_name, step_name, inputStringStep.getInput());
-                                    err = 0;
-                                }
-                                else
-                                {
-                                    throw runtime_error("Nu ati introdus un tip valid!");
-                                    err = 1;
-                                }
+                    cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
+                    cin >> skip;
 
-                            } while (err == 1);
+                    if (skip == "y")
+                    {
+                        analytics.skip();
+                        system("clear");
+                        continue;
+                    }
+                    else if (skip == "n")
+                    {
+                        system("clear");
+                        cout << "Step name: " << step_name << endl;
+                        cout << "Step description: " << step_description << endl;
+                        try
+                        {
+
+                            float value;
+                            cout << "Introduceti valoarea: ";
+                            cin >> value;
+                            InputStep<float> inputFloatStep;
+                            inputFloatStep.setInput(value);
+                            step.update(file_name, step_name, to_string(value));
                         }
                         catch (const std::exception &e)
                         {
@@ -1006,9 +1004,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "output")
                 {
-
-                    cout << "Step name: " << step_name << endl;
-                    cout << "Step description: " << step_description << endl;
+                    cout << "Step number: " << step_number << endl;
 
                     cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
                     cin >> skip;
@@ -1032,39 +1028,60 @@ void Step::runSteps(string file_name)
                             string step_description;
                             vector<string> steps;
                             int nr_steps;
-
                             do
                             {
-                                cout << "Introduceti numele fisierului: ";
-                                cin >> file;
-                                if (file.empty())
+                                do
                                 {
-                                    throw runtime_error("Nu ati introdus niciun nume!");
-                                    err = 1;
-                                }
-                                else
+                                    fflush(stdin);
+                                    cout << "Introduceti numele fisierului: ";
+                                    cin >> file;
+                                    if (file.empty())
+                                    {
+                                        throw runtime_error("Nu ati introdus niciun nume!");
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        OutputStep outputStep;
+                                        outputStep.setFile(file);
+                                        err = 0;
+                                    }
+                                } while (err == 1);
+
+                                do
                                 {
-                                    OutputStep outputStep;
-                                    outputStep.setFile(file);
-                                    err = 0;
-                                }
-                            } while (err == 1);
+                                    fflush(stdin);
+                                    cout << "Introduceti titlul: ";
+                                    getline(cin, step_title);
 
-                            do
-                            {
-                                cout << "Introduceti titlul: ";
-                                cin >> step_title;
+                                    if (step_title.empty())
+                                    {
+                                        cout << "Nu ati introdus niciun titlu!" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        err = 0;
+                                    }
 
-                                cout << "Introduceti o descriere pentru fisier: ";
-                                getline(cin, step_description);
+                                } while (err == 1);
 
-                                cout << "Doriti sa vedeti pasii anteriori? (y/n)" << endl;
-                                cin >> skip;
-
-                                if (skip == "y")
+                                do
                                 {
-                                    step.showPreviousSteps(step_name, file_name);
-                                }
+                                    cout << "Introduceti o descriere pentru fisier: ";
+                                    getline(cin, step_description);
+
+                                    if (step_description.empty())
+                                    {
+                                        cout << "Nu ati introdus nicio descriere!" << endl;
+                                        err = 1;
+                                    }
+                                    else
+                                    {
+                                        err = 0;
+                                    }
+
+                                } while (err == 1);
 
                                 cout << "Introduceti numarul de pasi: ";
                                 cin >> nr_steps;
@@ -1100,9 +1117,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "file")
                 {
-
-                    cout << "Step name: " << step_name << endl;
-                    cout << "Step description: " << step_description << endl;
+                    cout << "Step number: " << step_number << endl;
 
                     cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
                     cin >> skip;
@@ -1149,9 +1164,7 @@ void Step::runSteps(string file_name)
                 }
                 else if (step_type == "display")
                 {
-
-                    cout << "Step name: " << step_name << endl;
-                    cout << "Step description: " << step_description << endl;
+                    cout << "Step number: " << step_number << endl;
 
                     cout << "Doresti sa  sari peste acest pas? (y/n)" << endl;
                     cin >> skip;

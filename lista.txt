@@ -1,0 +1,9 @@
+Lista de cumparaturi
+Mai jos se regasesc detaliile listei de cumparaturi
+step2 : Lidl
+step3 : 
+step4 : Oua
+step5 : bucata
+step6 : 20.000000
+step7 : 1.000000
+step8 : 21.000000

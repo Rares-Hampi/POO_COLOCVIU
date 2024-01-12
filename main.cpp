@@ -487,15 +487,15 @@ public:
                                     do
                                     {
                                         system("clear");
-                                        cout << "Simple: afiseaza doar numele si descrierea pasului\n";
+                                        cout << "Text/ Title: afiseaza doar numele si descrierea pasului\n";
                                         cout << "Calculus: calculeaza o operatie intre 2 pasi oferiti ca input\n";
-                                        cout << "Input: citeste un string sau un numar de la tastatura si il salveaza intr-un fisier\n";
+                                        cout << "Input_string/ Input Number: citeste un string sau un numar de la tastatura si il salveaza intr-un fisier\n";
                                         cout << "File: prin intermediul acestui pas adugi un fisier\n";
                                         cout << "Output:prin intermediul acestui pas creezi un fisier, ii adaugi un titlu, o descrire si o valoare de la un pas anterior \n";
                                         cout << "Display: afiseaza o valoare de la un pas anterior\n";
                                         cout << "End: inchide workflowul\n";
 
-                                        cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file/output/display/end): ";
+                                        cout << "Ce tip de task doresti sa fie? (text/title/calculus/input_string/input_number/file/output/display/end): ";
                                         cin >> type;
 
                                         if (type.empty())
@@ -575,14 +575,14 @@ public:
                         do
                         {
                             system("clear");
-                            cout << "Simple: afiseaza doar numele si descrierea pasului\n";
+                            cout << "Text/ Title: afiseaza doar numele si descrierea pasului\n";
                             cout << "Calculus: calculeaza o operatie intre 2 pasi oferiti ca input\n";
-                            cout << "Input: citeste un string sau un numar de la tastatura si il salveaza intr-un fisier\n";
+                            cout << "Input_string/ Input_number: citeste un string sau un numar de la tastatura si il salveaza intr-un fisier\n";
                             cout << "File: prin intermediul acestui pas adugi un fisier\n";
                             cout << "Output:prin intermediul acestui pas creezi un fisier, ii adaugi un titlu, o descrire si o valoare de la un pas anterior \n";
                             cout << "Display: afiseaza o valoare de la un pas anterior\n";
                             cout << "End: inchide workflowul\n";
-                            cout << "Ce tip de task doresti sa fie? (simple/calculus/input/file/output/display/end): ";
+                            cout << "Ce tip de task doresti sa fie? (text/title/calculus/input_string/input_number/file/output/display/end): ";
 
                             cin >> type;
                             if (type.empty())
