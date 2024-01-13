@@ -186,7 +186,6 @@ void Step::showPreviousSteps(string break_step, string flow_name)
     string directory = "./workflows/";
     try
     {
-        cout << "Flow name: " << flow_name << endl;
 
         ifstream file(directory + flow.getName() + ".csv");
 
