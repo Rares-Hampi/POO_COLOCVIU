@@ -7,3 +7,6 @@ step5 : bucata
 step6 : 20.000000
 step7 : 1.000000
 step8 : 21.000000
+Title
+Descriere
+step3 : 

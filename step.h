@@ -36,8 +36,6 @@ public:
 
     void showAllSteps(string file_name);
 
-    void showPreviousSteps(string step_name, string file_name);
-
     void runSteps(string file);
 
     void update(string file_name, string step_name, string value);

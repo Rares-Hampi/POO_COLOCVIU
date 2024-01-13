@@ -181,53 +181,6 @@ void Step::showAllSteps(string file_name)
     }
 }
 
-void Step::showPreviousSteps(string break_step, string flow_name)
-{
-    string directory = "./workflows/";
-    try
-    {
-
-        ifstream file(directory + flow.getName() + ".csv");
-
-        if (file.is_open())
-        {
-            string line;
-            while (getline(file, line))
-            {
-                stringstream ss(line);
-                string step;
-                string name;
-                string description;
-                string type;
-                string value;
-
-                getline(ss, step, ',');
-                getline(ss, name, ',');
-                getline(ss, description, ',');
-                getline(ss, type, ',');
-                getline(ss, value, ',');
-                if (step == break_step)
-                {
-                    break;
-                }
-                else
-                {
-                    cout << name << " : " << value << endl;
-                }
-            }
-        }
-        else
-        {
-            throw runtime_error("Nu s-a putut deschide fisierul");
-        }
-        file.close();
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-}
-
 void Step::update(string file_name, string step_name, string new_value)
 {
 
@@ -379,7 +332,7 @@ bool CalculusStep::decideOperation(string operation)
     try
     {
         // string  = step1 + step2, make a regex to check if the operation is valid
-        regex operation_regex("(step[0-9]+)(\\s+)(\\+|-|\\*|/|min|max)(\\s+)(step[0-9]+)");
+        regex operation_regex("(step[0-9]+)(\\s+)(\\+|\\-|/|\\*|min|max)(\\s+)(step[0-9]+)");
 
         if (regex_match(operation, operation_regex))
         {
@@ -438,8 +391,7 @@ string CalculusStep::getOperationType(string operation)
             throw runtime_error("Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.");
         }
 
-        //  operation = step1 + step2 and I want to extract step1 and step2
-        regex operation_regex("(\\+|-|\\*|/|min|max)");
+        regex operation_regex("(\\+|\\-|/|\\*|min|max)");
         sregex_iterator iter(operation.begin(), operation.end(), operation_regex);
         sregex_iterator end;
         while (iter != end)
@@ -464,6 +416,9 @@ float CalculusStep::executeOperation(string operation, string file_name, string 
 
     try
     {
+        string step1;
+        string step2;
+        string comp_step;
 
         string operation_type = getOperationType(operation);
 
@@ -472,9 +427,36 @@ float CalculusStep::executeOperation(string operation, string file_name, string 
             throw runtime_error("Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.");
         }
 
-        if (steps[0][4] > step[4] || steps[1][4] > step[4])
+        if (steps[0].size() > 4)
         {
-            throw runtime_error("Nu s-a putut executa operatia. Nu poti efectua o operatie cu un pas la care nu ai ajuns inainte.");
+            step1 = steps[0][4] + steps[0][5];
+        }
+        else
+        {
+            step1 = steps[0][4];
+        }
+
+        if (steps[1].size() > 4)
+        {
+            step2 = steps[1][4] + steps[1][5];
+        }
+        else
+        {
+            step2 = steps[1][4];
+        }
+
+        if (step.size() > 4)
+        {
+            comp_step = step[4] + step[5];
+        }
+        else
+        {
+            comp_step = step[4];
+        }
+
+        if (step1 > comp_step || step2 > comp_step)
+        {
+            throw runtime_error("Nu s-a putut executa operatia. Nu poti folosi un step mai mare decat cel curent.");
         }
 
         numbers.push_back(stof(getValue(file_name, steps[0], "float")));
@@ -525,12 +507,12 @@ float CalculusStep::executeOperation(string operation, string file_name, string 
         }
         else
         {
-            throw "Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.";
+            throw runtime_error("Nu s-a putut executa operatia. Operatia trebuie sa fie de forma: step1 + step2 sau step1 - step2 sau step1 * step2 sau step1 / step2 sau step1 min step2 sau step1 max step2.");
         }
     }
     catch (const std::exception &e)
     {
-        throw e;
+        cout << e.what() << '\n';
     }
 }
 
@@ -1031,7 +1013,6 @@ void Step::runSteps(string file_name)
                             {
                                 do
                                 {
-                                    fflush(stdin);
                                     cout << "Introduceti numele fisierului: ";
                                     cin >> file;
                                     if (file.empty())
@@ -1045,6 +1026,7 @@ void Step::runSteps(string file_name)
                                         outputStep.setFile(file);
                                         err = 0;
                                     }
+                                    fflush(stdin);
                                 } while (err == 1);
 
                                 do
