@@ -1,0 +1,12 @@
+step_name,title,descriprion,type,value
+step1,Descriere flow,Acest flow joaca rolul unei liste de cumparaturi,title,
+step2,La ce magazin vrei sa mergi?,Trebuie sa introduci numele magazinului la care doresti sa mergi,input_string,Lidl
+step3,Creeaza un fisier in care sa adaugi lista,Trebuie sa introduci numele fisierului pe care doresti sa-l creezi,file
+step4,Ce produs doresti sa cumperi?,Introdu numele produsului,input_string,Oua
+step5,In ce fel se cumpara acest produs : bucata / kg?,Trebuie sa introduci modul de achizitie,input_string,bucata
+step6,Ce cantitate doresti sa cumperi?,Trebuie sa introduci cantitatea sub format de numar,input_number,20.000000
+step7,Cat costa acest produs?,Trebuie sa introduci pretul produsului sub forma de numar,input_number,1.000000
+step8,Calculeaza suma pe care o vei plati,Trebuie sa introduci pasul in care ai setat cantitatea semnul * si pasul in care ai setat pretul,calculus,21.000000
+step9,Creeza lista de cumparaturi,Trebuie sa introduci un titlu si o descriere pentru a crea lista,output,
+step10,Afiseaza lista,Trebuie sa oferi numele listei,display,
+step11,Multumim pentru ca ai folosit serviciul,Ai ajuns la finalul flow-ului,end

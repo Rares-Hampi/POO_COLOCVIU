@@ -1,6 +1,4 @@
 nume flow,nr inceperi,nr terminari,nr taskuri sarite,nr taskuri esuate,medie erori pe incercari
-TestT,1,0,6,0,0
-TestT,1,0,3,2,2
 Lista,1,0,10,0,0
 Lista,1,0,9,0,0
 Lista,1,1,0,0,0

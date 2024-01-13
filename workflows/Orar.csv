@@ -1,0 +1,17 @@
+step_name,title,descriprion,type,value
+step1,Orarul tau,Aici o sa-ti construim orarul,text,
+step2,Ce zi este azi?,Trebuie sa introduci o zi a saptamanii,input_string,
+step3,La ce ora iti incepi programul?,Trebuie sa introduci ora la care incepi cursurile si sa fie de tip int ex: 18 sau 9,input_number,
+step4,La ce ora iti termini programul?,Trebuie sa introduci ora la care termini cursurile si sa fie de tip int ex: 18 sau 9,input_number,
+step5,Cate ore petreci la facultate,Trebuie sa intoduci operatia de scadere intre pasul in care ai setat ora de inceput si de sfarsit,calculus,
+step6,Cate cursuri ai astazi?,Trebuie sa introduci numarul de cursuri,input_number,
+step7,Cate ore dureaza un curs?,Trebuie sa intoduci numarul de ore aferent unui curs,input_number,
+step8,Numarul de ore petrecute la cursuri,Trebuie sa intoduci operatia de inmultire intre numarul de cursuri si numarul de ore aferent unui curs,calculus,
+step9,Cate laboratoare/seminare ai astazi?,Trebuie sa intoduci numarul de laboratoare/seminare,input_number,
+step10,Cate ore dureaza un laborator/seminar?,Trebuie sa intoduci numarul de ore aferente unui laborator/seminar,input_number,
+step11,Numarul de ore petrecute la laboratoare/seminare,Trebuie sa intoduci operatia de inmultire intre numarul de laboratoare/seminare si numarul de ore aferente unui laborator/seminar,calculus,
+step12,Cate ore petreci cu un scop la facultate?,Trebuie sa intoduci operatia de adunare intre numarul de ore petrecute la cursuri si numarul de ore petrecute la laboratoare/seminare,calculus,
+step13,Cat timp pierzi la facultate?,Trebuie sa intoduci operatia de scadere intre numarul de ore petrecute la facultate si numarul de ore petrecute cu un scop la facultate,calculus,
+step14,Salveaza-ti programul,Trebuie sa introduci un nume si o descriere,output,
+step15,Afiseaza-ti programul,Trebuie sa introduci numele fisierului(cu tot cu extensie) in care s-a creat programul,display
+step16,Programul a fost creat.Felicitari!,Sa ai o zi frumoasa,end

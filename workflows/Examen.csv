@@ -1,0 +1,11 @@
+step_name,title,descriprion,type,value
+step1,Program pentru examen din sesiune,Prin intermediul acestui flow o sa-ti cream un program pentru un examen din sesiune,title
+step2,Introduceti numele examenului,Introduceti numele examenului,input_string,
+step3,Introduceti data examenului,Introduceti data examenului sub format de numar ex: 25 sau 5,input_number,
+step4,Introduceti ziua de astazi,Introduceti ziua de astazi sub format de numar ex: 25 sau 5,input_number,
+step6,Numarul de zile pana la examen,Trebuie sa intoduci operatia scadere dintre ziua examenului si ziua de astazi,calculation,
+step7,Cate ore pe zi vrei sa inveti?,Introdu numarul de ore pe zi pe care vrei sa le inveti,input_number,
+step8,Cate ore vei aloca pentru a invata pentru acest examen,Trebuie sa introduci operatia inmultire dintre numarul de zile pana la examen si numarul de ore pe zi,calculation,
+step9,Creeaza programul,Trebuie sa introduci un titlu si o descriere pentru a crea lista,output,
+step10,Afiseaza programul,Trebuie sa introduci numele fisierului(Cu tot cu extensie) in care se afla progarmul,display
+step11,Sper sa-ti respecti programul,Flow-ul s-a terminat,end
